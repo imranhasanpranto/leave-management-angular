@@ -1,0 +1,40 @@
+<div class="container">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>user id</th>
+        <th>From date</th>
+        <th>To date</th>
+        <th>Leave type</th>
+        <th>Reason</th>
+        <th>Emergency contact</th>
+        <th>Attachment</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let request of leaveRequests">
+        <td><span>{{request.id}}</span></td>
+        <td><span>{{request.fromDate | date}}</span></td>
+        <td><span>{{request.toDate | date}}</span></td>
+        <td><span>{{request.leaveType}}</span></td>
+        <td><span>{{request.leaveReason}}</span></td>
+        <td><span>{{request.emergencyContact}}</span></td>
+        <!-- <td></td> -->
+        <td >
+            <img src="http://localhost:8080/api/file/get-file/{{request.filePath}}"  height=60 width=100/>
+        </td>
+        <td>
+            <button *ngIf="isAdmin" class="btn btn-sm btn-warning" (click)="approveRequest(request.id)">
+              <i class="fa fa-check"></i>Approve</button>
+            <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="rejectRequest(request.id)">
+              <i class="fa fa-remove"></i>Reject</button>
+            <button *ngIf="!isAdmin" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
+              <i class="fa fa-edit"></i>Edit</button>
+            <button *ngIf="!isAdmin" class="btn btn-sm btn-danger" (click)="cancelRequest(request.id)">
+              <i class="fa fa-remove"></i>Cancel</button>
+          </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>

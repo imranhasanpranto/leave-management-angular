@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit{
     .authenticate(this.email?.value, this.password?.value)
     .subscribe(
       data=>{
-        this.router.navigate(['/'])
+        this.router.navigate(['/requests'])
         this.invalidLogin = false
         console.log('authentication successfull: ', data);
       },

@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -19,7 +20,11 @@ export class SignupComponent implements OnInit{
     userType: 1
   };
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private authService: AuthenticationService){}
+  constructor(private formBuilder: FormBuilder, 
+    private userService: UserService, 
+    private authService: AuthenticationService,
+    private router: Router
+    ){}
 
   form!: FormGroup;
   isSubmitted: boolean = false;
@@ -58,7 +63,7 @@ export class SignupComponent implements OnInit{
     .save(this.name?.value, this.email?.value, this.password?.value)
     .subscribe(
       data=>{
-        //this.router.navigate(['/'])
+        this.router.navigate(['login'])
         this.invalidLogin = false
         console.log('registration successfull: ', data);
       },

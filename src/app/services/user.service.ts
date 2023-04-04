@@ -10,12 +10,12 @@ import { catchError, retry } from 'rxjs/operators';
 export class UserService {
   private usersUrl: string;
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      Authorization: 'my-auth-token'
-    })
-  };
+  // httpOptions = {
+  //   headers: new HttpHeaders({
+  //     'Content-Type':  'application/json',
+  //     Authorization: 'my-auth-token'
+  //   })
+  // };
 
   constructor(private http: HttpClient) {
     this.usersUrl = "http://localhost:8080/api/user";

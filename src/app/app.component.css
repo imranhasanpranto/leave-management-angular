@@ -1,0 +1,10 @@
+p {
+    font-family: Lato;
+  }
+  .example-card {
+    max-width: 400px;
+  }
+
+  .container{
+    margin-top:5%;
+  }
