@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { LeaveApplication } from 'src/app/classes/leave-application';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LeaveApplicationService } from 'src/app/services/leave-application.service';
@@ -15,7 +16,8 @@ export class LeaveRequestsComponent implements OnInit{
   userId!: number;
 
   constructor(private leaveService: LeaveApplicationService, 
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private router: Router
     ){}
   ngOnInit(): void {
     this.getAllPendingRequests();
@@ -43,7 +45,7 @@ export class LeaveRequestsComponent implements OnInit{
   }
 
   editRequest(requestId: number){
-    
+    this.router.navigate([`edit-application/${requestId}`]);
   }
 
   cancelRequest(requestId: number){

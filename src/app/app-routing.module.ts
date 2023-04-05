@@ -6,14 +6,17 @@ import { SignupComponent } from './components/signup/signup.component';
 import { UsersComponent } from './components/users/users.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { LeaveRequestsComponent } from './components/leave-requests/leave-requests.component';
+import { SearchLeaveComponent } from './components/search-leave/search-leave.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'requests', pathMatch: 'full' },
   // { path: '', component: UsersComponent, canActivate:[AuthGuardService] },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'leave-application', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },
+  { path: 'add-application', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },
+  { path: 'edit-application/:id', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },
   { path: 'users', component: UsersComponent, canActivate:[AuthGuardService] },
+  { path: 'search-leave', component: SearchLeaveComponent, canActivate:[AuthGuardService] },
   { path: 'requests', component: LeaveRequestsComponent, canActivate: [AuthGuardService] }
 ];
 

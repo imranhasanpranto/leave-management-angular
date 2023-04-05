@@ -54,7 +54,7 @@
           </mat-form-field> 
 
           <div>Reason</div>
-          <textarea cols="64" rows = "10" class ="tesxt-area" formControlName="reason">
+          <textarea cols="64" rows = "10" class ="tesxt-area" formControlName="leaveReason">
 
           </textarea>
 
@@ -62,7 +62,9 @@
           <input id="contact" type="text" formControlName="emergencyContact">
 
           <div>Attachment</div>
-          <input type="file" accept="image/*" id="attachment" (change)="selectFile($event)" formControlName="attachment">
+          <input type="file" #attachment accept="image/*" id="attachment" (change)="selectFile($event)"
+           
+           >
 
           <!-- <label>{{leaveForm.valid}}</label> -->
 

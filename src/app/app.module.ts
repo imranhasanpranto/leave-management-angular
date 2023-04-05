@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LoginComponent } from './components/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './components/users/users.component';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { LeaveApplicationFormComponent } from './components/leave-application-form/leave-application-form.component';
@@ -25,6 +25,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeaveRequestsComponent } from './components/leave-requests/leave-requests.component';
 import { MatCardModule } from '@angular/material/card';
 import { JwtService } from './services/jwt.service';
+import { SearchLeaveComponent } from './components/search-leave/search-leave.component';
+import { MatIconModule } from '@angular/material/icon';
+import { FilterPipe } from './pipes/search-pipe';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,9 @@ import { JwtService } from './services/jwt.service';
     LoginComponent,
     UsersComponent,
     LeaveApplicationFormComponent,
-    LeaveRequestsComponent
+    LeaveRequestsComponent,
+    SearchLeaveComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -48,7 +53,9 @@ import { JwtService } from './services/jwt.service';
     MatSelectModule,
     NgbModule,
     MatToolbarModule,
-    MatCardModule
+    MatCardModule,
+    MatIconModule,
+    FormsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,  

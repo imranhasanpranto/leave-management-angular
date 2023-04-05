@@ -3,20 +3,22 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LeaveApplication } from '../classes/leave-application';
 
-// const httpOptions = {
-//     headers: new HttpHeaders({
-//       'responseType':  'application/json'
-//     })
-//   };
+const httpOptions = {
+    headers: new HttpHeaders({
+      'responseType':  'blob'
+    })
+  };
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeaveApplicationService {
   private url: string;
+  private fileUrl: string;
 
   constructor(private http: HttpClient) {
     this.url = 'http://localhost:8080/api/leave/application';
+    this.fileUrl = 'http://localhost:8080/api/file/get-file';
    }
 
   saveFile(file: File): Observable<string>{
@@ -26,8 +28,16 @@ export class LeaveApplicationService {
     return this.http.post<any>(`${this.url}/uploadFile`, data);
   }
 
+  getLeaveRequestById(id: number): Observable<LeaveApplication>{
+    return this.http.get<LeaveApplication>(`${this.url}/getById/${id}`);
+  }
+
   saveLeaveApplication(data: FormData): Observable<any>{
     return this.http.post<any>(`${this.url}/add`, data);
+  }
+
+  updateLeaveApplication(data: FormData): Observable<any>{
+    return this.http.put<any>(`${this.url}/update`, data);
   }
 
   getAllLeaveRequests(): Observable<LeaveApplication[]>{
@@ -48,6 +58,10 @@ export class LeaveApplicationService {
 
   cancelRequest(requestId: number): Observable<any>{
     return this.http.put<any>(`${this.url}/cancel/${requestId}`, {});
+  }
+
+  getFileByPath(path: string): Observable<Blob>{
+    return this.http.get<Blob>(`${this.fileUrl}/${path}`, httpOptions);
   }
 
 }
