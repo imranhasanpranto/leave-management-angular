@@ -1,21 +1,29 @@
-<div class="container">
+<div class="container" *ngIf="isLoggedIn$ | async">
     <div class="row">
       <div class="col-sm">
         <a routerLink="/search-leave"
            role="button"
            class="btn btn-outline-primary btn-lg btn-block text-center">
-          <span><i class="fa fa-search"></i></span>
-          <br>Approved Leave's
+          <!-- <span><i class="fa fa-search"></i></span> -->
+          Approved Leave Applications
         </a>
       </div>
       <div class="col-sm">
-        Button 2
+        <a routerLink="/requests"
+           role="button"
+           class="btn btn-outline-primary btn-lg btn-block text-center">
+          Pending Leave Applications
+        </a>
       </div>
       <div class="col-sm">
         Button 3
       </div>
       <div class="col-sm">
-        Logout
+        <a (click)="logout()"
+           role="button"
+           class="btn btn-outline-primary btn-lg btn-block text-center">
+          Logout
+        </a>
       </div>
     </div>
 </div>

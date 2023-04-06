@@ -21,8 +21,8 @@ export class LeaveRequestsComponent implements OnInit{
     ){}
   ngOnInit(): void {
     this.getAllPendingRequests();
-    this.isAdmin = this.authService.isAdmin();
-    this.userId = this.authService.getUserId();
+    this.isAdmin = this.authService.isAdmin;
+    this.userId = this.authService.userId;
   }
 
   getAllPendingRequests(){

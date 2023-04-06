@@ -9,8 +9,7 @@ import { LeaveRequestsComponent } from './components/leave-requests/leave-reques
 import { SearchLeaveComponent } from './components/search-leave/search-leave.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'requests', pathMatch: 'full' },
-  // { path: '', component: UsersComponent, canActivate:[AuthGuardService] },
+  { path: '', redirectTo: 'search-leave', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'add-application', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },

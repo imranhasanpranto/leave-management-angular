@@ -28,6 +28,7 @@ import { JwtService } from './services/jwt.service';
 import { SearchLeaveComponent } from './components/search-leave/search-leave.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FilterPipe } from './pipes/search-pipe';
+import { SortDirective } from './directives/sort.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FilterPipe } from './pipes/search-pipe';
     LeaveApplicationFormComponent,
     LeaveRequestsComponent,
     SearchLeaveComponent,
-    FilterPipe
+    FilterPipe,
+    SortDirective
   ],
   imports: [
     BrowserModule,
