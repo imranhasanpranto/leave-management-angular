@@ -1,11 +1,11 @@
 :host {
     display: flex;
     justify-content: center;
-    margin: 100px 0px;
+    background-color: #f8f9fa!important;
   }
 
   mat-card {
-    max-width: 400px;
+    max-width: 600px;
     margin: 2em auto;
     text-align: center;
   }
@@ -13,6 +13,10 @@
   .mat-form-field {
     width: 100%;
     min-width: 300px;
+  }
+
+  .mat-mdc-form-field{
+    min-width: 500px !important;
   }
 
   mat-card-title,

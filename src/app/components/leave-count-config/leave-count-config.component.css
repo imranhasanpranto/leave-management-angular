@@ -4,17 +4,9 @@
 }
 
 .container{
-  flex: 1 1 auto;
-  max-width: 800px;
-  display: flex;
+  flex: 1 1 auto; 
+  max-width: 600px;
   justify-content: center;
   margin: 2em auto;
   /* background-color: #f8f9fa!important; */
 }
-
-.error-message{
-  background-color: red;
-  color: white;
-  text-align: center;
-}
-

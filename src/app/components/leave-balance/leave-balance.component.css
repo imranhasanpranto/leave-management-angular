@@ -1,0 +1,17 @@
+:host{
+    display: block;
+    background-color: #f8f9fa!important;
+  }
+  
+  .container{
+    flex: 1 1 auto;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    margin: 2em auto;
+    /* background-color: #f8f9fa!important; */
+  }
+
+  .spacer{
+    flex:1 1 auto;
+}

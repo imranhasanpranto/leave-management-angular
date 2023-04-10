@@ -11,6 +11,7 @@ export class LeaveApplication {
       public leaveType: string,
       public filePath: string,
       public applicationStatus: string,
-      public attachment: File
+      public attachment: File,
+      public isFileUpdated: boolean
     ) {}
   }

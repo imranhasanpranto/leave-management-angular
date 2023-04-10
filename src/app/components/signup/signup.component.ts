@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
+import { ValidationsService } from 'src/app/services/validations.service';
 
 @Component({
   selector: 'app-signup',
@@ -23,7 +24,8 @@ export class SignupComponent implements OnInit{
   constructor(private formBuilder: FormBuilder, 
     private userService: UserService, 
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private validationService: ValidationsService
     ){}
 
   form!: FormGroup;
@@ -34,7 +36,7 @@ export class SignupComponent implements OnInit{
     this.form = this.formBuilder.group(
       {
         name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, Validators.email], [this.validationService.userNameValidator(this.userService)]],
         password: ['', Validators.required]
       }
     );  

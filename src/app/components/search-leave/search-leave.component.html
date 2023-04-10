@@ -1,36 +1,30 @@
 <div class="container">
-    <!-- <div class="border">
-      <a routerLink="/add-application">
-      <button class="btn btn-md btn-outline-primary">
-        <i class="fa fa-calendar"></i>Leave Request</button>
-      </a>
-    </div> -->
 
-    <mat-toolbar class="search-block ">
-        <mat-toolbar-row style="padding: 0 5px;">
-           
-            <a routerLink="/add-application">
-              <button class="btn btn-md btn-outline-primary">
-                <i class="fa fa-plus"></i>Leave Request</button>
-              </a>
-            <input class="search-control col-lg-4" type="text" placeholder="Search" [(ngModel)]="searchText">
-        </mat-toolbar-row>
-    </mat-toolbar>
-  
-    <table class="table table-bordered table-striped" >
-      <thead>
+  <mat-toolbar class="search-block ">
+    <mat-toolbar-row style="padding: 0 5px;">
+
+      <a routerLink="/add-application">
+        <button class="btn btn-md btn-outline-primary">
+          <i class="fa fa-plus"></i>Leave Request</button>
+      </a>
+      <input class="search-control col-lg-4" type="text" placeholder="Search" [(ngModel)]="searchText">
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <table class="table table-bordered table-striped">
+    <thead>
       <tr>
-        <th [appSort]="leaveRequests" data-type="string" data-name="userName" data-order="asc" >Name</th>
+        <th [appSort]="leaveRequests" data-type="string" data-name="userName" data-order="asc">Name</th>
         <th [appSort]="leaveRequests" data-type="date" data-name="fromDate" data-order="asc">From date</th>
-        <th [appSort]="leaveRequests" data-type="date" data-name="toDate" data-order="asc" >To date</th>
+        <th [appSort]="leaveRequests" data-type="date" data-name="toDate" data-order="asc">To date</th>
         <th>Leave type</th>
         <th>Reason</th>
         <th>Emergency contact</th>
         <th>Attachment</th>
         <th>Action</th>
       </tr>
-      </thead>
-      <tbody>
+    </thead>
+    <tbody>
       <tr *ngFor="let request of leaveRequests | filter: searchText">
         <td><span>{{request.userName}}</span></td>
         <td><span>{{request.fromDate | date}}</span></td>
@@ -39,16 +33,16 @@
         <td><span>{{request.leaveReason}}</span></td>
         <td><span>{{request.emergencyContact}}</span></td>
         <!-- <td></td> -->
-        <td >
-            <img src="http://localhost:8080/api/file/get-file/{{request.filePath}}"  height=60 width=100/>
+        <td>
+          <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
         </td>
         <td>
-            <button *ngIf="userId == request.userId" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
-              <i class="fa fa-edit"></i>Edit</button>
-            <button *ngIf="userId == request.userId" class="btn btn-sm btn-danger" (click)="cancelRequest(request.id)">
-              <i class="fa fa-remove"></i>Delete</button>
-          </td>
+          <button *ngIf="userId == request.userId" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button *ngIf="userId == request.userId" class="btn btn-sm btn-danger" (click)="cancelRequest(request.id)">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
       </tr>
-      </tbody>
-    </table>
-  </div>
+    </tbody>
+  </table>
+</div>

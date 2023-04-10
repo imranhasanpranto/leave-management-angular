@@ -23,7 +23,7 @@ export class SearchLeaveComponent implements OnInit{
     ){}
   ngOnInit(): void {
     this.getAllApprovedRequests();
-    this.userId = this.authService.userId;
+    this.userId = this.authService.getUserId();
   }
 
   getAllApprovedRequests(){

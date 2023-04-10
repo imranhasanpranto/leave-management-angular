@@ -19,10 +19,15 @@ export class LeaveApplicationFormComponent implements OnInit{
   leaveForm!: FormGroup;
   minDate!: Moment;
   maxDate!: Moment;
-  selectedFiles!: FileList;
+
+  leaveDates: Date[] = []
+  blockedDates: Number[] = [];
+
 
   id: string = '';
+  idValue: number = -1;
   isAddMode: boolean = true;
+  isFileUpdated: boolean = false;
 
   @ViewChild('attachment', { static : false}) fileInput! : ElementRef;
 
@@ -31,7 +36,7 @@ export class LeaveApplicationFormComponent implements OnInit{
     {value: 'Sick', text: 'Sick'}
   ]
 
-  selectedLeave = 'Casual';
+  selectedLeave = '';
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -43,15 +48,21 @@ export class LeaveApplicationFormComponent implements OnInit{
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
+    this.idValue = this.id? this.id as any: -1;
     this.isAddMode = !this.id;
+
+    const dataId: number = this.isAddMode?-1: this.id as any;
+
+    this.leaveService.getAllLeaveDates(dataId).subscribe(list => 
+      {
+        this.leaveDates = list;
+        this.blockedDates = list.map(day=> new Date(day).valueOf());
+      });
 
     const currentYear = moment().year();
     // this.minDate = moment().add(1,'days');
     this.minDate = moment([currentYear , 0, 1]);
     this.maxDate = moment([currentYear, 11, 31]);
-
-    console.log(this.minDate);
-    console.log(this.maxDate);
 
     this.leaveForm = this.formBuilder.group(
       {
@@ -63,11 +74,11 @@ export class LeaveApplicationFormComponent implements OnInit{
         attachment: ['']
       },
       {
-        validator: this.validator.groupValidator('fromDate', 'toDate'),
+        validator: [this.validator.groupValidator('fromDate', 'toDate')],
+        asyncValidators: [this.validator.leaveCountValidator(this.leaveService, this.idValue)]
       }
     )
-    console.log("id:", this.id);
-    console.log("isEdit:", this.isAddMode);
+
     if(!this.isAddMode){
       this.leaveService.getLeaveRequestById(this.id as any)
       .pipe(first())
@@ -84,9 +95,9 @@ export class LeaveApplicationFormComponent implements OnInit{
 
           //this.leaveService.getFileByPath(x.filePath).subscribe(data=>);
 
-          let fileName = x.filePath.split("/")[1];
+          let fileName = x.filePath.split("/")[1].split("_")[1];
           const data = new ClipboardEvent('').clipboardData || new DataTransfer();
-          data.items.add(new File([x.attachment], fileName, {type:"image/jpeg"}));
+          data.items.add(new File([], fileName));
           this.fileInput.nativeElement.files = data.files;
           // this.fileInput.nativeElement.value = data.files[0];
 
@@ -143,22 +154,12 @@ export class LeaveApplicationFormComponent implements OnInit{
     leaveApplicationDTO.append('leaveReason', this.leaveForm.get('leaveReason')?.value);
     leaveApplicationDTO.append('emergencyContact', this.leaveForm.get('emergencyContact')?.value);
     leaveApplicationDTO.append('leaveType', this.leaveForm.get('leaveType')?.value);
-    
+    leaveApplicationDTO.append('isFileUpdated', this.isFileUpdated? 'true': 'false');
     console.log('attachment: ', this.leaveForm.get('attachment')?.value);
     if(this.leaveForm.get('attachment')?.value){
       leaveApplicationDTO.append("file", this.leaveForm.get('attachment')?.value);
     }
     return leaveApplicationDTO;
-  }
-
-  fileUpload(){
-    if(this.selectedFiles && this.selectedFiles.length > 0){
-      let selectedFile: File = this.selectedFiles[0];
-      this.leaveService.saveFile(selectedFile).subscribe(response=>{
-        console.log(response);
-      }
-      );
-    }
   }
 
   onReset(){
@@ -167,12 +168,23 @@ export class LeaveApplicationFormComponent implements OnInit{
 
   selectFile(event: Event){
     let fileList = (event.target as HTMLInputElement).files;
+    this.isFileUpdated = true;
     if(fileList && fileList.length > 0){
       this.leaveForm.get('attachment')?.setValue(fileList[0]);
-      this.selectedFiles = fileList;
     }else{
       this.leaveForm.get('attachment')?.setValue(null);
     }
+  }
+
+
+  dateFilter: (date: Moment | null) => boolean =
+    (date: Moment | null) => {
+      if(!date){
+        return true;
+      }
+      const day = date?.day();
+      const baseValue = new Date(date.format("yyyy-MM-DD")).valueOf();
+      return (!this.blockedDates.includes(baseValue)) && day !== 0 && day !== 6;
   }
 
 }

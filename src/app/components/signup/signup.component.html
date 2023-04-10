@@ -1,98 +1,53 @@
-<!-- <form [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" class="form-control" formControlName="name">
-        <span class="text-danger"
-            *ngIf="(name?.touched || isSubmitted) && name?.errors?.['required']">
-            Name is required
+<mat-card>
+  <mat-card-title>Sign-up</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Name" formControlName="name">
+        </mat-form-field>
+        <span class="text-danger" style="display: block;"
+          *ngIf="(name?.touched || isSubmitted) && name?.errors?.['required']">
+          Name is required
         </span>
-      </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="text" class="form-control" formControlName="email">
-      <span class="text-danger"
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Email" formControlName="email">
+        </mat-form-field>
+        <span class="text-danger" style="display: block;"
           *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
           Email is required
-      </span>
-      <span class="text-danger"
-          *ngIf="email?.touched && email?.errors?.['email']">
-          Enter a valid email address
-      </span>
-    </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" class="form-control" formControlName="password">
-        <span class="text-danger"
-            *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
-            Password is required
         </span>
-    </div>
-    <div class="form-group">
-      <button type="submit" class="btn btn-success">Register</button>
-      <button
-          type="button"
-          (click)="onReset()"
-          class="btn btn-warning float-right"
-        >
+        <span class="text-danger" style="display: block;" *ngIf="email?.touched && email?.errors?.['email']">
+          Enter a valid email address
+        </span>
+
+        <span class="text-danger" style="display: block;" *ngIf="email?.errors?.['usernameAlreadyExists']">
+          This username is already taken!
+        </span>
+
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Password" formControlName="password">
+        </mat-form-field>
+
+        <span class="text-danger" style="display: block;"
+          *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
+          Password is required
+        </span>
+      </p>
+
+      <div class="button">
+        <button type="submit" [disabled]="form.invalid" class="btn btn-success">Register</button>
+        <button type="button" (click)="onReset()" class="btn btn-warning float-right">
           Reset
         </button>
-    </div>
-  </form> -->
+      </div>
 
-  <mat-card>
-    <mat-card-title>SignUp</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
-        <p>
-          <mat-form-field>
-            <input type="text" matInput placeholder="Name" formControlName="name">
-          </mat-form-field>
-          <span class="text-danger" style="display: block;"
-            *ngIf="(name?.touched || isSubmitted) && name?.errors?.['required']">
-            Name is required
-          </span>
-        </p>
-
-        <p>
-          <mat-form-field>
-            <input type="text" matInput placeholder="Email" formControlName="email">
-          </mat-form-field>
-          <span class="text-danger" style="display: block;"
-              *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
-              Email is required
-          </span>
-          <span class="text-danger" style="display: block;"
-              *ngIf="email?.touched && email?.errors?.['email']">
-              Enter a valid email address
-          </span>
-        </p>
-
-        <p>
-          <mat-form-field>
-            <input type="password" matInput placeholder="Password" formControlName="password">
-          </mat-form-field>
-  
-          <span class="text-danger" style="display: block;"
-            *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
-            Password is required
-          </span>
-        </p>
-  
-        <!-- <p *ngIf="error" class="error">
-          {{ error }}
-        </p> -->
-  
-        <div class="button">
-          <button type="submit" class="btn btn-success">Register</button>
-          <button
-              type="button"
-              (click)="onReset()"
-              class="btn btn-warning float-right"
-            >
-              Reset
-        </button>
-        </div>
-  
-      </form>
-    </mat-card-content>
-  </mat-card>
+    </form>
+  </mat-card-content>
+</mat-card>

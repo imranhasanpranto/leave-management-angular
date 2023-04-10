@@ -1,73 +1,104 @@
-<div class="login-container">
-  <div class="login-content">
-    <mat-toolbar class="login-toolbar" color="primary">Leave Request</mat-toolbar>
-		<mat-card>
-      <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
 
-        <mat-form-field >
-          <!-- <mat-label>Type</mat-label> -->
-          <mat-select formControlName="leaveType" [(ngModel)]="selectedLeave">
-            <mat-option *ngFor="let type of leaveType" [value]="type.value">
-              {{type.text}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="leaveForm.get('leaveType')?.hasError('required')">Please choose a leave type</mat-error>
-        </mat-form-field>
-      <br>
-        <mat-form-field appearance="fill">
-            <mat-label>from</mat-label>
-            <input matInput [matDatepicker]="fDate" [min]="minDate" [max]="maxDate" formControlName="fromDate">
-            <mat-datepicker-toggle matSuffix [for]="fDate"></mat-datepicker-toggle>
-            <mat-datepicker #fDate></mat-datepicker>
+
+<div class="container">
+  <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Leave Application
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          
+          <mat-form-field >
+            <mat-label>Leave Type</mat-label>
+            <mat-select formControlName="leaveType" [(ngModel)]="selectedLeave">
+              <mat-option *ngFor="let type of leaveType" [value]="type.value">
+                {{type.text}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="leaveForm.get('leaveType')?.hasError('required')">Please choose a leave type</mat-error>
+          </mat-form-field>
+        </div>
         
-            <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('required')">
-              Valid date required.
-            </mat-error>    
-            <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMin')">
-              Invalid minimum date.
-            </mat-error>
-            <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMax')">
-              Invalid maximum date.
-            </mat-error>
-          </mat-form-field> 
-      <br>
+        
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field appearance="fill">
+              <mat-label>from</mat-label>
+              <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="fDate" [min]="minDate" [max]="maxDate" formControlName="fromDate">
+              <mat-datepicker-toggle matSuffix [for]="fDate"></mat-datepicker-toggle>
+              <mat-datepicker #fDate></mat-datepicker>
+          
+              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('required')">
+                Valid date required.
+              </mat-error>    
+              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMin')">
+                Invalid minimum date.
+              </mat-error>
+              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMax')">
+                Invalid maximum date.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-sm-6">
+            <mat-form-field appearance="fill">
+              <mat-label>to</mat-label>
+              <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="tDate" [min]="minDate" [max]="maxDate" formControlName="toDate">
+              <mat-datepicker-toggle matSuffix [for]="tDate"></mat-datepicker-toggle>
+              <mat-datepicker #tDate></mat-datepicker>
+          
+              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('required')">
+                Valid date required.
+              </mat-error>    
+              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMin')">
+                Invalid minimum date.
+              </mat-error>
+              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMax')">
+                Invalid maximum date.
+              </mat-error>
+
+              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('inValidDateRange')">
+                Select toDate greater than fromDate.
+              </mat-error>
+
+            </mat-form-field> 
+          </div>
+        </div>
+
+        <div class="mb-4 error-message" *ngIf="leaveForm.errors?.['leaveCountExceeds']">
+          <small >Annual Leave Count Exceeded!</small>
+        </div>
+
+          
+        <div class="row">
+          <mat-form-field>
+            <mat-label>Leave Reason</mat-label>
+            <textarea matInput formControlName="leaveReason"  rows = "5">
+
+            </textarea>
+          </mat-form-field>
+        </div>
+          
+        <div class="row">
           <mat-form-field appearance="fill">
-            <mat-label>to</mat-label>
-            <input matInput [matDatepicker]="tDate" [min]="minDate" [max]="maxDate" formControlName="toDate">
-            <mat-datepicker-toggle matSuffix [for]="tDate"></mat-datepicker-toggle>
-            <mat-datepicker #tDate></mat-datepicker>
-        
-            <mat-error *ngIf="leaveForm.get('toDate')?.hasError('required')">
-              Valid date required.
-            </mat-error>    
-            <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMin')">
-              Invalid minimum date.
-            </mat-error>
-            <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMax')">
-              Invalid maximum date.
-            </mat-error>
-
-            <mat-error *ngIf="leaveForm.get('toDate')?.hasError('inValidDateRange')">
-              Select toDate greater than fromDate.
-            </mat-error>  
-
-          </mat-form-field> 
-
-          <div>Reason</div>
-          <textarea cols="64" rows = "10" class ="tesxt-area" formControlName="leaveReason">
-
-          </textarea>
-
-          <div >Emergency Contact: </div>
-          <input id="contact" type="text" formControlName="emergencyContact">
-
-          <div>Attachment</div>
+            <mat-label>Emergency Contact</mat-label>
+            <input matInput id="contact" formControlName="emergencyContact">
+          </mat-form-field>
+        </div>
+          
+        <div class="row">
+          <label for="attachment">Attachment</label>
           <input type="file" #attachment accept="image/*" id="attachment" (change)="selectFile($event)"
-           
-           >
+            
+          >
+        </div>
 
-          <!-- <label>{{leaveForm.valid}}</label> -->
-
+      
+        
+        <div class="row mt-3 float-end">
           <div class="form-group">
             <button type="submit" [disabled]="leaveForm.invalid" class="btn btn-success">Submit</button>
             <button
@@ -78,7 +109,10 @@
                 Reset
               </button>
           </div>
-      </form>
+        </div>
+      </mat-card-content>
     </mat-card>
-  </div>
+  </form>
 </div>
+
+

@@ -1,0 +1,48 @@
+<div class="container">
+    
+    <form [formGroup]="leaveCountForm" (ngSubmit)="update()">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    Annual Leave Count
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row mb-3">
+                    <div class="">
+                        <!-- <label for="leaveCount" class="form-label">Yearly Leave</label> -->
+                        
+                        <input type="number" mdIn class="form-control " id="leaveCount" formControlName="leaveCount" />
+        
+                        <div *ngIf="leaveCountForm.get('leaveCount')?.invalid && leaveCountForm.get('leaveCount')?.errors && 
+                                ( leaveCountForm.get('leaveCount')?.dirty || leaveCountForm.get('leaveCount')?.touched)
+                            ">
+                            <small class="text-danger"
+                                *ngIf="leaveCountForm.get('leaveCount')?.hasError('required')">
+                                This field is required.
+                            </small>
+                            <small class="text-danger"
+                            *ngIf="leaveCountForm.get('leaveCount')?.hasError('min')">
+                                Minimum value is 1
+                            </small>
+                            <small class="text-danger"
+                            *ngIf="leaveCountForm.get('leaveCount')?.hasError('max')">
+                                Maximum value is 50
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row float-end">
+                    <div class="button">
+                        <button type="submit" [disabled]="leaveCountForm.invalid" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </mat-card-content>
+            
+            
+            
+        </mat-card>
+    </form>
+        
+
+</div>

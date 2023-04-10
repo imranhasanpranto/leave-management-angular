@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable, Output, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
@@ -26,20 +26,25 @@ export class AuthenticationService {
   tokenSubscription = new Subscription();
   timeout: number = 0;
 
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private loggedIn: BehaviorSubject<boolean>;
 
-  //public isLoggedIn: boolean = false;
-  public userId: number = -1;
-  public isAdmin: boolean = false;
+  private loggedInRoleAdmin: BehaviorSubject<boolean>;
 
   get isLoggedIn(){
     return this.loggedIn.asObservable();
   }
 
+  get isLoggedInRoleAdmin(){
+    return this.loggedInRoleAdmin.asObservable();
+  }
+
   constructor(private http: HttpClient, 
     private jwtService: JwtService,
     private router: Router
-    ) { }
+    ) {
+      this.loggedIn = new BehaviorSubject(this.getIsLoggedIn());
+      this.loggedInRoleAdmin = new BehaviorSubject(this.getIsAdmin());
+    }
 
   authenticate(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(AUTH_API + 'authenticate', {
@@ -55,11 +60,11 @@ export class AuthenticationService {
           let claims = JSON.parse(JSON.stringify(decoded));
           sessionStorage.setItem("role", claims.role);
           sessionStorage.setItem("userId", claims.userId);
+          sessionStorage.setItem("state", 'true');
 
           
           this.loggedIn.next(true);
-          this.userId = claims.userId;
-          this.isAdmin = claims.role === 'Admin';
+          this.loggedInRoleAdmin.next(claims.role == 'Admin');
           // this.timeout = claims.exp - claims.iat;
           // this.expirationCounter(this.timeout * 1000);
           return userData;
@@ -103,24 +108,36 @@ export class AuthenticationService {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("role");
     sessionStorage.removeItem("userId");
+    sessionStorage.setItem("state", 'false');
 
     this.loggedIn.next(false);
-    this.userId = -1;
-    this.isAdmin = false;
+    this.loggedInRoleAdmin.next(false);
 
     this.router.navigate(["/login"]);
   }
 
-  // isAdmin(){
-  //   let role = sessionStorage.getItem("role");
-  //   console.log('role:', role);
-  //   return role === null? false: (role === 'Admin'? true: false);
-  // }
+  getIsAdmin(){
+    let role = sessionStorage.getItem("role");
+    return role === null? false: (role === 'Admin'? true: false);
+  }
 
-  // getUserId(): number{
-  //   let userId = sessionStorage.getItem("userId");
-  //   return userId === null? -1: userId as any;
-  // }
+  getRole(){
+    return sessionStorage.getItem("role");
+  }
+
+  getUserId(): number{
+    let userId = sessionStorage.getItem("userId");
+    return userId === null? -1: userId as any;
+  }
+
+  getIsLoggedIn(){
+    const state = sessionStorage.getItem('state');
+    if(state === 'true'){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }
 
 

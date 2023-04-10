@@ -9,3 +9,21 @@
     -moz-box-shadow: 0 0 45px rgba(0, 0, 0, .2);
     box-shadow: 0 0 45px rgba(0, 0, 0, .2);
   }
+
+  .fill-remaining-space {
+    flex: 1 1 auto;
+  }
+
+  .search-div{
+    margin: 10px;
+  }
+
+  .search-field{
+    width: 70%;
+    margin-left: 10px;
+  }
+
+  .action-td{
+    white-space: nowrap; 
+    vertical-align: middle;
+  }

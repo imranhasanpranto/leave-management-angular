@@ -33,4 +33,8 @@ export class UserService {
     );
    }
 
+   public isUserNameTaken(userName: string):Observable<any>{
+    return this.http.get<any>(`${this.usersUrl}/isUserEmailTaken/${userName}`);
+   }
+
 }

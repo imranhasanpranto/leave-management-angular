@@ -1,47 +1,77 @@
 <div class="container">
-  <div class="border">
-    <a routerLink="/add-application">
-    <button class="btn btn-md btn-outline-primary">
-      <i class="fa fa-plus"></i>Leave Request</button>
+  <mat-toolbar class="mb-3">
+    <span class="fill-remaining-space"></span>
+    <span>Leave Requests</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar>
+  <mat-toolbar class="mat-elevation-z8">
+    <a routerLink="/add-application" >
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>Leave Request
+      </button>
     </a>
-  </div>
 
-  <table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>From date</th>
-      <th>To date</th>
-      <th>Leave type</th>
-      <th>Reason</th>
-      <th>Emergency contact</th>
-      <th>Attachment</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let request of leaveRequests">
-      <td><span>{{request.userName}}</span></td>
-      <td><span>{{request.fromDate | date}}</span></td>
-      <td><span>{{request.toDate | date}}</span></td>
-      <td><span>{{request.leaveType}}</span></td>
-      <td><span>{{request.leaveReason}}</span></td>
-      <td><span>{{request.emergencyContact}}</span></td>
-      <!-- <td></td> -->
-      <td >
-          <img src="http://localhost:8080/api/file/get-file/{{request.filePath}}"  height=60 width=100/>
-      </td>
-      <td>
-          <button *ngIf="isAdmin" class="btn btn-sm btn-warning" (click)="approveRequest(request.id)">
+    <input matInput class="search-field" [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+
+  </mat-toolbar>
+  <div>
+    <mat-table mat-table [dataSource]="leaveRequestsMat" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let request">{{request.userName}}</td>
+      </ng-container>
+      <ng-container matColumnDef="fromDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>From Date</th>
+        <td mat-cell *matCellDef="let request">{{request.fromDate}}</td>
+      </ng-container>
+      <ng-container matColumnDef="toDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>To Date</th>
+        <td mat-cell *matCellDef="let request">{{request.toDate}}</td>
+      </ng-container>
+      <ng-container matColumnDef="leaveType">
+        <th mat-header-cell *matHeaderCellDef>Leave Type</th>
+        <td mat-cell *matCellDef="let request">{{request.leaveType}}</td>
+      </ng-container>
+      <ng-container matColumnDef="leaveReason">
+        <th mat-header-cell *matHeaderCellDef>Leave Reason</th>
+        <td mat-cell *matCellDef="let request">{{request.leaveReason}}</td>
+      </ng-container>
+      <ng-container matColumnDef="emergencyContact">
+        <th mat-header-cell *matHeaderCellDef>Emergency Contact</th>
+        <td mat-cell *matCellDef="let request">{{request.emergencyContact}}</td>
+      </ng-container>
+      <ng-container matColumnDef="attachment">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let request">
+          <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="viewOnCalender">
+        <th mat-header-cell *matHeaderCellDef>Calender View</th>
+        <td mat-cell *matCellDef="let request">
+          <button class="btn btn-sm btn-warning" (click)="openCalender(request.id)">
+            <i class="fa fa-calendar"></i></button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td class="action-td" mat-cell *matCellDef="let request">
+          <button *ngIf="isAdmin" class="btn btn-sm btn-warning" (click)="openDialogue(request.id, 'approve')">
             <i class="fa fa-check"></i>Approve</button>
-          <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="rejectRequest(request.id)">
+          <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id, 'reject')">
             <i class="fa fa-remove"></i>Reject</button>
           <button *ngIf="!isAdmin" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
             <i class="fa fa-edit"></i>Edit</button>
-          <button *ngIf="!isAdmin" class="btn btn-sm btn-danger" (click)="cancelRequest(request.id)">
+          <button *ngIf="!isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id, 'delete')">
             <i class="fa fa-remove"></i>Cancel</button>
         </td>
-    </tr>
-    </tbody>
-  </table>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons
+      aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
 </div>

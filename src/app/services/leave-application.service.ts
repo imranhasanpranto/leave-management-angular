@@ -64,4 +64,13 @@ export class LeaveApplicationService {
     return this.http.get<Blob>(`${this.fileUrl}/${path}`, httpOptions);
   }
 
+  getAllLeaveDates(id: number): Observable<Date[]>{
+    return this.http.get<Date[]>(`${this.url}/getAllLeaveDates/${id}`);
+  }
+
+  public isAnnualLeaveCountExceeds(fromDate: number, toDate: number, id: number):Observable<any>{
+    console.log('fromDate:', fromDate, ' toDate:', toDate, ' id:', id);
+    return this.http.get<any>(`${this.url}/isAnnualLeaveCountExceeds/${fromDate}/${toDate}/${id}`);
+   }
+
 }

@@ -1,32 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Moment } from 'moment';
-import { ValidatorFn, FormGroup, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormGroup, AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
+import { UserService } from './user.service';
+import { Observable, catchError, map } from 'rxjs';
+import { LeaveApplicationService } from './leave-application.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidationsService {
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
-  
-  // dateRangeValidator(min: Date, max: Date): ValidatorFn {
-  //   return control => {
-  //     if (!control.value) return null;
-  
-  //     const dateValue = new Date(control.value);
-  
-  //     if (min && dateValue < min) {
-  //       return { message: 'error message' };
-  //     }
-  
-  //     if (max && dateValue > max) {
-  //       return { message: 'error message' };
-  //     }
-  
-  //     return null;
-  //   }
-  // }
+
 
   groupValidator(minDate: string, maxDate: string)  {
     return (formGroup: FormGroup) => {
@@ -34,7 +20,6 @@ export class ValidationsService {
       const fromDate = formGroup.controls[minDate];
       const toDate = formGroup.controls[maxDate];
       if (!fromDate || !toDate) {
-        console.log('one of dates is null');
         return null;
       }
 
@@ -50,6 +35,30 @@ export class ValidationsService {
         return null;
       }
     }
+  }
+
+
+  userNameValidator(userService: UserService): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors|null> => {
+      return userService
+        .isUserNameTaken(control.value)
+        .pipe(
+          map((result) =>
+            result.status ? { usernameAlreadyExists: true } : null
+          )
+        );
+    };
+  }
+
+  leaveCountValidator(leaveService: LeaveApplicationService, id: number): AsyncValidatorFn {
+    return (formGroup: AbstractControl): Observable<ValidationErrors|null> => {
+      return leaveService.isAnnualLeaveCountExceeds(Date.parse(formGroup.value.fromDate), Date.parse(formGroup.value.toDate), id)
+        .pipe(
+          map((result) =>
+            result.status ? { leaveCountExceeds: true } : null
+          )
+        );
+    };
   }
 
 }

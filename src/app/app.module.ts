@@ -20,7 +20,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { CUSTOM_DATE_FORMATS } from './date-formats';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule} from '@angular/material/select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeaveRequestsComponent } from './components/leave-requests/leave-requests.component';
 import { MatCardModule } from '@angular/material/card';
@@ -29,6 +29,19 @@ import { SearchLeaveComponent } from './components/search-leave/search-leave.com
 import { MatIconModule } from '@angular/material/icon';
 import { FilterPipe } from './pipes/search-pipe';
 import { SortDirective } from './directives/sort.directive';
+import { HeaderComponent } from './components/header/header.component';
+import { MatButtonModule } from '@angular/material/button';
+import { LeaveCountConfigComponent } from './components/leave-count-config/leave-count-config.component';
+import { LeaveBalanceComponent } from './components/leave-balance/leave-balance.component';
+import { MatDialogModule} from '@angular/material/dialog';
+import { ConformDialogComponent } from './components/conform-dialog/conform-dialog.component';
+import { MatTableModule} from '@angular/material/table';
+import { MatPaginatorModule} from '@angular/material/paginator';
+import { MatSortModule} from '@angular/material/sort';
+import { FullCalendarModule } from '@fullcalendar/angular'; 
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { CalenderComponent } from './components/calender/calender.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +53,12 @@ import { SortDirective } from './directives/sort.directive';
     LeaveRequestsComponent,
     SearchLeaveComponent,
     FilterPipe,
-    SortDirective
+    SortDirective,
+    HeaderComponent,
+    LeaveCountConfigComponent,
+    LeaveBalanceComponent,
+    ConformDialogComponent,
+    CalenderComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +75,13 @@ import { SortDirective } from './directives/sort.directive';
     MatToolbarModule,
     MatCardModule,
     MatIconModule,
-    FormsModule
+    MatButtonModule,
+    FormsModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    FullCalendarModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,  
