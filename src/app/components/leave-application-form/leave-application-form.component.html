@@ -98,9 +98,14 @@
           
         <div class="row">
           <label for="attachment">Attachment</label>
-          <input type="file" #attachment accept="image/*" id="attachment" (change)="selectFile($event)"
-            
-          >
+          <div class="row">
+            <div class="col">
+              <input type="file" #attachment accept="image/*" id="attachment" (change)="selectFile($event)">
+            </div>
+            <div class="col">
+              <img *ngIf="imageUrl" [src]="imageUrl" height=60 width=100 />
+            </div>
+          </div>
         </div>
 
       

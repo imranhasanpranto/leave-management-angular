@@ -28,6 +28,7 @@ export class LeaveApplicationFormComponent implements OnInit{
   idValue: number = -1;
   isAddMode: boolean = true;
   isFileUpdated: boolean = false;
+  imageUrl = '';
 
   @ViewChild('attachment', { static : false}) fileInput! : ElementRef;
 
@@ -97,12 +98,16 @@ export class LeaveApplicationFormComponent implements OnInit{
         this.leaveForm.get('leaveType')?.patchValue(x.leaveType);
         this.leaveForm.get('leaveReason')?.patchValue(x.leaveReason);
         this.leaveForm.get('emergencyContact')?.patchValue(x.emergencyContact);
+        this.imageUrl = "http://localhost:8080/api/file/get-file/"+x.filePath;
 
         if(x.filePath !== null && x.filePath !== ""){
 
           //this.leaveService.getFileByPath(x.filePath).subscribe(data=>);
 
-          let fileName = x.filePath.split("/")[1].split("_")[1];
+          //let fileName = x.filePath.split("/")[1].split("_")[1];
+          let rawFileName = x.filePath.split("/")[1];
+          let splitPos = rawFileName.indexOf("_");
+          let fileName = rawFileName.substring(splitPos+1);
           const data = new ClipboardEvent('').clipboardData || new DataTransfer();
           data.items.add(new File([], fileName));
           this.fileInput.nativeElement.files = data.files;
@@ -178,8 +183,16 @@ export class LeaveApplicationFormComponent implements OnInit{
     this.isFileUpdated = true;
     if(fileList && fileList.length > 0){
       this.leaveForm.get('attachment')?.setValue(fileList[0]);
+      var reader = new FileReader();
+
+      reader.readAsDataURL(fileList[0]); // read file as data url
+
+      reader.onload = (event) => { // called once readAsDataURL is completed
+        this.imageUrl = event.target?.result as string;
+      }
     }else{
       this.leaveForm.get('attachment')?.setValue(null);
+      this.imageUrl = '';
     }
   }
 
