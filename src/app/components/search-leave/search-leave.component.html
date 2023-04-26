@@ -14,13 +14,14 @@
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th [appSort]="leaveRequests" data-type="string" data-name="userName" data-order="asc">Name</th>
-        <th [appSort]="leaveRequests" data-type="date" data-name="fromDate" data-order="asc">From date</th>
-        <th [appSort]="leaveRequests" data-type="date" data-name="toDate" data-order="asc">To date</th>
+        <th [appSort]="leaveRequests" data-type="string" data-name="userName" data-order="asc">Name <i  class="fa fa-arrow-up sort-by-userName" aria-hidden="true"></i></th>
+        <th [appSort]="leaveRequests" data-type="date" data-name="fromDate" data-order="asc">From date <i class="fa fa-arrow-up sort-by-fromDate" aria-hidden="true"></i></th>
+        <th [appSort]="leaveRequests" data-type="date" data-name="toDate" data-order="asc">To date <i class="fa fa-arrow-up sort-by-toDate" aria-hidden="true"></i></th>
         <th>Leave type</th>
         <th>Reason</th>
         <th>Emergency contact</th>
         <th>Attachment</th>
+        <th>Calender View</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -37,9 +38,13 @@
           <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
         </td>
         <td>
+          <button class="btn btn-sm btn-warning" (click)="openCalender(request.id)">
+            <i class="fa fa-calendar"></i></button>
+        </td>
+        <td>
           <button *ngIf="userId == request.userId" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
             <i class="fa fa-edit"></i>Edit</button>
-          <button *ngIf="userId == request.userId" class="btn btn-sm btn-danger" (click)="cancelRequest(request.id)">
+          <button *ngIf="userId == request.userId || isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id)">
             <i class="fa fa-remove"></i>Delete</button>
         </td>
       </tr>

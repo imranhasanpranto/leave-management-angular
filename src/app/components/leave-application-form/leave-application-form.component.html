@@ -60,16 +60,23 @@
                 Invalid maximum date.
               </mat-error>
 
-              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('inValidDateRange')">
+              <!-- <mat-error *ngIf="leaveForm.get('toDate')?.hasError('inValidDateRange')">
                 Select toDate greater than fromDate.
-              </mat-error>
+              </mat-error> -->
 
             </mat-form-field> 
           </div>
         </div>
 
-        <div class="mb-4 error-message" *ngIf="leaveForm.errors?.['leaveCountExceeds']">
+        <!-- <div class="mb-4 error-message" *ngIf="leaveForm.errors?.['leaveCountExceeds']">
           <small >Annual Leave Count Exceeded!</small>
+        </div> -->
+
+        <div *ngIf="leaveForm.errors?.['leaveCountExceeds']" class="alert alert-danger" role="alert">
+          <strong>Annual Leave Count Exceeded!</strong>
+        </div>
+        <div *ngIf="leaveForm.errors?.['inValidDateRange']" class="alert alert-danger" role="alert">
+          <strong>Invalid Date Range!</strong>
         </div>
 
           

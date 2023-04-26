@@ -16,9 +16,9 @@ export class CalenderComponent implements OnInit{
     plugins: [dayGridPlugin],
     initialView: 'dayGridMonth',
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth'
+      right: 'today'
     },
     weekends: true
   };
@@ -34,23 +34,6 @@ export class CalenderComponent implements OnInit{
         events: this.events
       };
     })
-
-    
-
-    // setTimeout(() => {
-    //   return this.leaveDaysService.getLeaveDaysByApplicationId(this.data.id).subscribe(data=>{
-    //     for(let i = 0; i < data.length; i++){
-    //       console.log(data[i]);
-    //       this.events.push({title: "test", date: data[i].leaveDate, color: '#0000FF'});
-    //     }
-    //   })
-    // }, 2200);
-    // setTimeout(() => {
-    //   this.calendarOptions = {
-    //     initialView: 'dayGridMonth',
-    //     events: this.events,
-    //   };
-    // }, 2500);
   }
 
   

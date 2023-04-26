@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalConfig } from '../classes/global-config';
 import { UserLeaveBalance } from '../classes/UserLeaveBalance';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class LeaveCountService {
   private leaveCountUrl: string;
 
   constructor(private http: HttpClient) {
-    this.configUrl = 'http://localhost:8080/api/config';
-    this.leaveCountUrl = 'http://localhost:8080/api/annual-leave/getLeaveBalance';
+    this.configUrl = environment.apiUrl + '/config';
+    this.leaveCountUrl = environment.apiUrl + '/annual-leave/getLeaveBalance';
   }
 
   getYearlyLeave(name: string): Observable<GlobalConfig>{

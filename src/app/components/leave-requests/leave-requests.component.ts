@@ -7,7 +7,7 @@ import { LeaveApplicationService } from 'src/app/services/leave-application.serv
 import { ConformDialogComponent } from '../conform-dialog/conform-dialog.component';
 import { DialogData } from 'src/app/classes/dialog-data';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import {MatPaginator} from '@angular/material/paginator';
+import { MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CalenderComponent } from '../calender/calender.component';
 
@@ -15,7 +15,6 @@ import { CalenderComponent } from '../calender/calender.component';
   selector: 'app-leave-requests',
   templateUrl: './leave-requests.component.html',
   styleUrls: ['./leave-requests.component.css']
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LeaveRequestsComponent implements OnInit{
   leaveRequests: LeaveApplication[] = [];
@@ -52,9 +51,6 @@ export class LeaveRequestsComponent implements OnInit{
 
   approveRequest(requestId: number){
     this.leaveService.approveRequest(requestId).subscribe(message=>{
-      // console.log(message);
-      // this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
-      // this.updateDataSource(this.leaveRequests);
       this.updateDataSource(requestId);
     });
     console.log(requestId);
@@ -106,9 +102,6 @@ export class LeaveRequestsComponent implements OnInit{
 
   rejectRequest(requestId: number){
     this.leaveService.rejectRequest(requestId).subscribe(message=>{
-      // console.log(message);
-      // this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
-      // this.updateDataSource(this.leaveRequests);
       this.updateDataSource(requestId);
     });
   }
@@ -119,9 +112,6 @@ export class LeaveRequestsComponent implements OnInit{
 
   cancelRequest(requestId: number){
     this.leaveService.cancelRequest(requestId).subscribe(message=>{
-      // this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
-      // this.updateDataSource(this.leaveRequests);
-      // this.leaveRequestsMat.data.indexOf
       this.updateDataSource(requestId);
     });
   }

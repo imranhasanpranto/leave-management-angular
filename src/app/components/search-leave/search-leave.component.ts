@@ -4,6 +4,10 @@ import { LeaveApplication } from 'src/app/classes/leave-application';
 import { LeaveApplicationService } from 'src/app/services/leave-application.service';
 import { MatIconRegistry } from "@angular/material/icon";
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { CalenderComponent } from '../calender/calender.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConformDialogComponent } from '../conform-dialog/conform-dialog.component';
+import { DialogData } from 'src/app/classes/dialog-data';
 
 @Component({
   selector: 'app-search-leave',
@@ -15,15 +19,18 @@ export class SearchLeaveComponent implements OnInit{
   searchText: string = "";
 
   userId: number = -1;
+  isAdmin: boolean = false;
 
   constructor(
     private leaveService: LeaveApplicationService,
     private router: Router,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private dialog: MatDialog
     ){}
   ngOnInit(): void {
     this.getAllApprovedRequests();
     this.userId = this.authService.getUserId();
+    this.isAdmin = this.authService.getIsAdmin();
   }
 
   getAllApprovedRequests(){
@@ -38,6 +45,49 @@ export class SearchLeaveComponent implements OnInit{
     this.leaveService.cancelRequest(requestId).subscribe(message=>{
       console.log(message);
       this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
+    });
+  }
+
+
+  openCalender(id: number){
+    let data = {
+      id: id
+    }
+    
+    const dialogRef = this.dialog.open(
+      CalenderComponent,
+      {
+        data: data,
+        height: '550px',
+        width: '600px',
+      }
+      );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+      }
+    });
+  }
+
+
+  openDialogue(id: number){
+    let data: DialogData = {
+      title: 'Delete Request',
+      message: 'Are you sure to delete the request?', 
+      confirmButtonText: 'Delete'
+    }
+    
+    const dialogRef = this.dialog.open(
+      ConformDialogComponent,
+      {
+        data: data
+      }
+      );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.cancelRequest(id);
+      }
     });
   }
 

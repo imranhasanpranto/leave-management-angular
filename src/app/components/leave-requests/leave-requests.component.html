@@ -22,11 +22,11 @@
       </ng-container>
       <ng-container matColumnDef="fromDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>From Date</th>
-        <td mat-cell *matCellDef="let request">{{request.fromDate}}</td>
+        <td mat-cell *matCellDef="let request">{{request.fromDate | date}}</td>
       </ng-container>
       <ng-container matColumnDef="toDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>To Date</th>
-        <td mat-cell *matCellDef="let request">{{request.toDate}}</td>
+        <td mat-cell *matCellDef="let request">{{request.toDate | date}}</td>
       </ng-container>
       <ng-container matColumnDef="leaveType">
         <th mat-header-cell *matHeaderCellDef>Leave Type</th>
@@ -41,7 +41,7 @@
         <td mat-cell *matCellDef="let request">{{request.emergencyContact}}</td>
       </ng-container>
       <ng-container matColumnDef="attachment">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <th mat-header-cell *matHeaderCellDef>Attachment</th>
         <td mat-cell *matCellDef="let request">
           <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
         </td>
@@ -54,7 +54,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <th mat-header-cell *matHeaderCellDef>Action</th>
         <td class="action-td" mat-cell *matCellDef="let request">
           <button *ngIf="isAdmin" class="btn btn-sm btn-warning" (click)="openDialogue(request.id, 'approve')">
             <i class="fa fa-check"></i>Approve</button>

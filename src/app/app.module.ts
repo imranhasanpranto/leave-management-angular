@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -42,6 +42,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalenderComponent } from './components/calender/calender.component';
+import { MatSnackBarModule} from '@angular/material/snack-bar';
+import { CustomErrorHandler } from './services/custom-error-handler.service';
 
 @NgModule({
   declarations: [
@@ -81,15 +83,23 @@ import { CalenderComponent } from './components/calender/calender.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    FullCalendarModule
+    FullCalendarModule,
+    MatSnackBarModule
   ],
-  providers: [{
+  providers: [
+  {
     provide: HTTP_INTERCEPTORS,  
-      useClass: HttpInterceptorService,  
-      multi: true  
+    useClass: HttpInterceptorService,  
+    multi: true  
   },
-  { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS},
-  JwtService
+  { 
+    provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS
+  },
+  JwtService,
+  {
+    provide: ErrorHandler,
+    useClass: CustomErrorHandler
+  }
 ],
   bootstrap: [AppComponent]
 })

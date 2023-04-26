@@ -74,8 +74,15 @@ export class LeaveApplicationFormComponent implements OnInit{
         attachment: ['']
       },
       {
-        validator: [this.validator.groupValidator('fromDate', 'toDate')],
+        // validator: [this.validator.groupValidator('fromDate', 'toDate')],
         asyncValidators: [this.validator.leaveCountValidator(this.leaveService, this.idValue)]
+        // validator: Validators.composeAsync(
+        //   [(control:AbstractControl) => Promise.resolve(this.validator.groupValidator('fromDate', 'toDate'))]),
+        // asyncValidators: [this.validator.leaveCountValidator(this.leaveService, this.idValue)]
+        // asyncValidators: Validators.composeAsync(
+        //   [(control:AbstractControl) => Promise.resolve(this.validator.groupValidator('fromDate', 'toDate')), 
+        //   this.validator.leaveCountValidator(this.leaveService, this.idValue)]
+        //   )
       }
     )
 

@@ -3,7 +3,7 @@
 
 <div class="spacer"></div>
     <div *ngIf="(isLoggedIn$ | async)">
-        <a mat-button routerLink="/search-leave">Leaves</a>
+        <a mat-button routerLink="/search-leave">Approved Leaves</a>
         <a mat-button routerLink="/leave-balance">Balance</a>
         <a mat-button routerLink="/requests">Requests</a>
         <a *ngIf="(isLoggedInRoleAdmin$ | async)" mat-button routerLink="/annual-leave">Config</a>

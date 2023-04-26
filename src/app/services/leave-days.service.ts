@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LeaveDays } from '../classes/leave-days';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { LeaveDays } from '../classes/leave-days';
 export class LeaveDaysService {
   url: string = '';
   constructor(private http: HttpClient) {
-    this.url = 'http://localhost:8080/api/leave-days';
+    this.url = environment.apiUrl+ '/leave-days';
   }
 
   getLeaveDaysByApplicationId(appId: number): Observable<LeaveDays[]>{

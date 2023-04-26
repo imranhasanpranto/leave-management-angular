@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../classes/user';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class UserService {
   // };
 
   constructor(private http: HttpClient) {
-    this.usersUrl = "http://localhost:8080/api/user";
+    this.usersUrl = environment.apiUrl+ "/user";
    }
 
    

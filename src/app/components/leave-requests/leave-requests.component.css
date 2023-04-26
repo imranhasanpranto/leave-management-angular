@@ -27,3 +27,7 @@
     white-space: nowrap; 
     vertical-align: middle;
   }
+
+  ::ng-deep .mat-sort-header-arrow {
+    opacity: 1 !important;
+   }

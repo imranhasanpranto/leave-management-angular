@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit{
 
   invalidLogin = false;
   users: User[] = [];
+  error: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -61,7 +62,7 @@ export class LoginComponent implements OnInit{
       },
       error=>{
         this.invalidLogin = true
-        console.log('authentication error: ', error);
+        this.error = error;
       }
     )
   }

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LeaveApplication } from '../classes/leave-application';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -17,8 +18,8 @@ export class LeaveApplicationService {
   private fileUrl: string;
 
   constructor(private http: HttpClient) {
-    this.url = 'http://localhost:8080/api/leave/application';
-    this.fileUrl = 'http://localhost:8080/api/file/get-file';
+    this.url = environment.apiUrl+'/leave/application';
+    this.fileUrl = environment.apiUrl+'/file/get-file';
    }
 
   saveFile(file: File): Observable<string>{

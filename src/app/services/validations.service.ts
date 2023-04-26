@@ -16,7 +16,7 @@ export class ValidationsService {
 
   groupValidator(minDate: string, maxDate: string)  {
     return (formGroup: FormGroup) => {
-      //console.log("called");
+      console.log("called");
       const fromDate = formGroup.controls[minDate];
       const toDate = formGroup.controls[maxDate];
       if (!fromDate || !toDate) {
@@ -55,7 +55,7 @@ export class ValidationsService {
       return leaveService.isAnnualLeaveCountExceeds(Date.parse(formGroup.value.fromDate), Date.parse(formGroup.value.toDate), id)
         .pipe(
           map((result) =>
-            result.status ? { leaveCountExceeds: true } : null
+            result.status ? { leaveCountExceeds: true } : (formGroup.value.fromDate > formGroup.value.toDate? {inValidDateRange:true}: null)
           )
         );
     };

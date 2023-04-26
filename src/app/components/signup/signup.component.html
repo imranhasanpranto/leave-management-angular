@@ -24,9 +24,9 @@
           Enter a valid email address
         </span>
 
-        <span class="text-danger" style="display: block;" *ngIf="email?.errors?.['usernameAlreadyExists']">
+        <!-- <span class="text-danger" style="display: block;" *ngIf="email?.errors?.['usernameAlreadyExists']">
           This username is already taken!
-        </span>
+        </span> -->
 
       </p>
 
@@ -41,11 +41,23 @@
         </span>
       </p>
 
-      <div class="button">
+      <div *ngIf="email?.errors?.['usernameAlreadyExists']" class="alert alert-danger" role="alert">
+        <strong>This email is already taken!</strong>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger" role="alert">
+        {{error}}
+      </div>
+
+      <div *ngIf="isRegistrationSuccessful" class="alert alert-success" role="alert">
+        Registration Successful. Please <a routerLink="/login" class="alert-link">Login</a>.
+      </div>
+
+      <div class="row">
         <button type="submit" [disabled]="form.invalid" class="btn btn-success">Register</button>
-        <button type="button" (click)="onReset()" class="btn btn-warning float-right">
+        <!-- <button type="button" (click)="onReset()" class="btn btn-warning float-right">
           Reset
-        </button>
+        </button> -->
       </div>
 
     </form>

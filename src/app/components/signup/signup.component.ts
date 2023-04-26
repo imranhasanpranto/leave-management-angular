@@ -31,6 +31,8 @@ export class SignupComponent implements OnInit{
   form!: FormGroup;
   isSubmitted: boolean = false;
   invalidLogin: boolean = false;
+  error: string | null = null;
+  isRegistrationSuccessful: boolean = false;
 
   ngOnInit(): void {
     this.form = this.formBuilder.group(
@@ -65,13 +67,17 @@ export class SignupComponent implements OnInit{
     .save(this.name?.value, this.email?.value, this.password?.value)
     .subscribe(
       data=>{
-        this.router.navigate(['login'])
+        //this.router.navigate(['login'])
         this.invalidLogin = false
+        this.isRegistrationSuccessful = true;
+        this.isSubmitted = false;
+        this.form.reset();
         console.log('registration successfull: ', data);
       },
       error=>{
         this.invalidLogin = true
         console.log('authentication error: ', error);
+        this.error = error;
       }
     )
   }

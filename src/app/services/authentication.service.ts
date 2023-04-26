@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { JwtService } from './jwt.service';
+import { environment } from 'src/environments/environment';
 
 import {BehaviorSubject, Subject, of } from "rxjs";
 import { delay } from 'rxjs/operators';
 import { Router } from "@angular/router";
 
-const AUTH_API = 'http://localhost:8080/api/auth/';
+const AUTH_API = environment.apiUrl+'/auth/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -53,20 +54,18 @@ export class AuthenticationService {
     }, httpOptions).pipe(
       map(
         userData =>{
-          sessionStorage.setItem("email", email);
+          localStorage.setItem("email", email);
           let tokenStr = "Bearer " + userData.token;
-          sessionStorage.setItem("token", tokenStr);
+          localStorage.setItem("token", tokenStr);
           let decoded = this.jwtService.DecodeToken(userData.token);
           let claims = JSON.parse(JSON.stringify(decoded));
-          sessionStorage.setItem("role", claims.role);
-          sessionStorage.setItem("userId", claims.userId);
-          sessionStorage.setItem("state", 'true');
+          localStorage.setItem("role", claims.role);
+          localStorage.setItem("userId", claims.userId);
+          localStorage.setItem("state", 'true');
 
           
           this.loggedIn.next(true);
           this.loggedInRoleAdmin.next(claims.role == 'Admin');
-          // this.timeout = claims.exp - claims.iat;
-          // this.expirationCounter(this.timeout * 1000);
           return userData;
         }
       )
@@ -98,17 +97,17 @@ export class AuthenticationService {
    }
 
   // isUserLoggedIn() {
-  //   let user = sessionStorage.getItem("email");
+  //   let user = localStorage.getItem("email");
   //   return !(user === null);
   // }
 
   logOut() {
     // this.tokenSubscription.unsubscribe();
-    sessionStorage.removeItem("email");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("role");
-    sessionStorage.removeItem("userId");
-    sessionStorage.setItem("state", 'false');
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    localStorage.setItem("state", 'false');
 
     this.loggedIn.next(false);
     this.loggedInRoleAdmin.next(false);
@@ -117,21 +116,21 @@ export class AuthenticationService {
   }
 
   getIsAdmin(){
-    let role = sessionStorage.getItem("role");
+    let role = localStorage.getItem("role");
     return role === null? false: (role === 'Admin'? true: false);
   }
 
   getRole(){
-    return sessionStorage.getItem("role");
+    return localStorage.getItem("role");
   }
 
   getUserId(): number{
-    let userId = sessionStorage.getItem("userId");
+    let userId = localStorage.getItem("userId");
     return userId === null? -1: userId as any;
   }
 
   getIsLoggedIn(){
-    const state = sessionStorage.getItem('state');
+    const state = localStorage.getItem('state');
     if(state === 'true'){
       return true;
     }else{

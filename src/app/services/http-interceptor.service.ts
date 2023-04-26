@@ -11,8 +11,8 @@ export class HttpInterceptorService implements HttpInterceptor{
   constructor(private router: Router, private authService: AuthenticationService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
-    if (sessionStorage.getItem('email') != null && sessionStorage.getItem('token') != null) {
-      this.token = sessionStorage.getItem('token')!;
+    if (localStorage.getItem('email') != null && localStorage.getItem('token') != null) {
+      this.token = localStorage.getItem('token')!;
       authReq = req.clone({ headers: req.headers
         .set('Authorization', this.token)});
     }
