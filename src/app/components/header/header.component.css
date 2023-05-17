@@ -1,3 +1,32 @@
-.spacer{
-    flex:1 1 auto;
-}
+
+
+::ng-deep #headerToolbar {
+    box-shadow: 3px 3px 5px 5px #ccc;
+    padding: 10px;
+    background-color: #00AA8D !important;
+    color: white;
+  }
+
+:host {
+    flex: 0 0 auto;
+    z-index: 1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+
+  ::ng-deep .dx-toolbar.header-toolbar .dx-toolbar-items-container .dx-toolbar-after {
+    padding: 0 40px;
+  }
+  
+  ::ng-deep .dx-toolbar .dx-toolbar-item.menu-button {
+    text-align: center;
+    padding: 0;
+  }
+
+  ::ng-deep .dx-button-mode-text {
+    color: white;
+  }
+  
+  ::ng-deep .header-title .dx-item-content {
+    padding: 0;
+    margin: 0;
+  }

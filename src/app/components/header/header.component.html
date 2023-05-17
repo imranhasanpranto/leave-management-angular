@@ -1,19 +1,90 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
-    <span>Leave Management System</span>
 
-<div class="spacer"></div>
-    <div *ngIf="(isLoggedIn$ | async)">
-        <a mat-button routerLink="/search-leave">Approved Leaves</a>
-        <a mat-button routerLink="/leave-balance">Balance</a>
-        <a mat-button routerLink="/requests">Requests</a>
-        <a *ngIf="(isLoggedInRoleAdmin$ | async)" mat-button routerLink="/annual-leave">Config</a>
-        <a mat-button (click)="logout()">Logout</a>
-    </div>
 
-    <div *ngIf="!(isLoggedIn$ | async)">
-        <a mat-button routerLink="/login">Login</a>
-        <a mat-raised-button routerLink="/signup" color="accent">Register</a>
-    </div>
-    
-    
-</mat-toolbar>
+<header>
+    <dx-toolbar
+    id="headerToolbar"
+    >
+        
+        <dxi-item location="before">
+            <h3>Leave Management System</h3>
+        </dxi-item>
+        <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Approved Request'"
+                (onClick)="loadPage('/search-leave')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+        <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Balance'"
+                (onClick)="loadPage('/leave-balance')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+
+        <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Requests'"
+                (onClick)="loadPage('/requests')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+        <dxi-item location="after"  *ngIf="(isLoggedInRoleAdmin$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Config'"
+                (onClick)="loadPage('/annual-leave')"
+              >
+              </dx-button>
+              <dx-button
+                stylingMode="text"
+                [text]="'Users'"
+                (onClick)="loadPage('/users')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+        <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Logout'"
+                (onClick)="logout()"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+        <dxi-item location="after" *ngIf="!(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Login'"
+                (onClick)="loadPage('/login')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+        <dxi-item location="after" *ngIf="!(isLoggedIn$ | async)">
+            <div *dxTemplate>
+              <dx-button
+                stylingMode="text"
+                [text]="'Register'"
+                (onClick)="loadPage('/signup')"
+              >
+              </dx-button>
+            </div>
+        </dxi-item>
+
+    </dx-toolbar>
+</header>

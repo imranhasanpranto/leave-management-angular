@@ -1,130 +1,181 @@
 
-
-<div class="container">
-  <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          Leave Application
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="row">
-          
-          <mat-form-field >
-            <mat-label>Leave Type</mat-label>
-            <mat-select formControlName="leaveType" [(ngModel)]="selectedLeave">
-              <mat-option *ngFor="let type of leaveType" [value]="type.value">
-                {{type.text}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="leaveForm.get('leaveType')?.hasError('required')">Please choose a leave type</mat-error>
-          </mat-form-field>
-        </div>
-        
-        
-        <div class="row">
-          <div class="col-sm-6">
-            <mat-form-field appearance="fill">
-              <mat-label>from</mat-label>
-              <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="fDate" [min]="minDate" [max]="maxDate" formControlName="fromDate">
-              <mat-datepicker-toggle matSuffix [for]="fDate"></mat-datepicker-toggle>
-              <mat-datepicker #fDate></mat-datepicker>
-          
-              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('required')">
-                Valid date required.
-              </mat-error>    
-              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMin')">
-                Invalid minimum date.
-              </mat-error>
-              <mat-error *ngIf="leaveForm.get('fromDate')?.hasError('matDatepickerMax')">
-                Invalid maximum date.
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="col-sm-6">
-            <mat-form-field appearance="fill">
-              <mat-label>to</mat-label>
-              <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="tDate" [min]="minDate" [max]="maxDate" formControlName="toDate">
-              <mat-datepicker-toggle matSuffix [for]="tDate"></mat-datepicker-toggle>
-              <mat-datepicker #tDate></mat-datepicker>
-          
-              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('required')">
-                Valid date required.
-              </mat-error>    
-              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMin')">
-                Invalid minimum date.
-              </mat-error>
-              <mat-error *ngIf="leaveForm.get('toDate')?.hasError('matDatepickerMax')">
-                Invalid maximum date.
-              </mat-error>
-
-              <!-- <mat-error *ngIf="leaveForm.get('toDate')?.hasError('inValidDateRange')">
-                Select toDate greater than fromDate.
-              </mat-error> -->
-
-            </mat-form-field> 
-          </div>
-        </div>
-
-        <!-- <div class="mb-4 error-message" *ngIf="leaveForm.errors?.['leaveCountExceeds']">
-          <small >Annual Leave Count Exceeded!</small>
-        </div> -->
-
-        <div *ngIf="leaveForm.errors?.['leaveCountExceeds']" class="alert alert-danger" role="alert">
-          <strong>Annual Leave Count Exceeded!</strong>
-        </div>
-        <div *ngIf="leaveForm.errors?.['inValidDateRange']" class="alert alert-danger" role="alert">
-          <strong>Invalid Date Range!</strong>
-        </div>
-
-          
-        <div class="row">
-          <mat-form-field>
-            <mat-label>Leave Reason</mat-label>
-            <textarea matInput formControlName="leaveReason"  rows = "5">
-
-            </textarea>
-          </mat-form-field>
-        </div>
-          
-        <div class="row">
-          <mat-form-field appearance="fill">
-            <mat-label>Emergency Contact</mat-label>
-            <input matInput id="contact" formControlName="emergencyContact">
-          </mat-form-field>
-        </div>
-          
-        <div class="row">
-          <label for="attachment">Attachment</label>
-          <div class="row">
-            <div class="col">
-              <input type="file" #attachment accept="image/*" id="attachment" (change)="selectFile($event)">
-            </div>
-            <div class="col">
-              <img *ngIf="imageUrl" [src]="imageUrl" height=60 width=100 />
-            </div>
-          </div>
-        </div>
-
+ <div class="container">
+  <form (submit)="onSubmit($event)">
+      <dx-form 
+      id="form"
+      [showValidationSummary]="true"
+      [formData]="leaveApplicationForm"
+      validationGroup="loginData"
       
-        
-        <div class="row mt-3 float-end">
-          <div class="form-group">
-            <button type="submit" [disabled]="leaveForm.invalid" class="btn btn-success">Submit</button>
-            <button
-                type="button"
-                (click)="onReset()"
-                class="btn btn-warning float-right"
-              >
-                Reset
-              </button>
-          </div>
+      >
+      <dxi-item itemType="group" [colCount]="2" caption="Leave Application">
+
+          <dxi-item
+            dataField="leaveType"
+            editorType="dxSelectBox"
+            [editorOptions]="{ dataSource: leaveType }"
+            colSpan="2"
+            cssClass="padding-remove"
+          >
+            <dxo-label alignment="left">
+            </dxo-label>
+            <dxi-validation-rule type="required" message="Leave type is required">
+            </dxi-validation-rule>
+          </dxi-item>
+
+
+          <dxi-item
+            dataField="fromDate"
+            editorType="dxDateBox"
+            pickerType="calender"
+
+            [editorOptions]="{
+              invalidDateMessage: 'The date must have the following format: yyyy/MM/dd',
+              placeholder: 'yyyy/MM/dd',
+              displayFormat: 'yyyy/MM/dd',
+              disabledDates: dateFilter }"
+          >
+            <dxo-label alignment="left">
+            </dxo-label>
+            <dxi-validation-rule
+              type="required"
+              message="From Date is required"
+            >
+            </dxi-validation-rule>
+            <dxi-validation-rule
+              type="range"
+              [min]="minDate"
+              message="Invalid minimum date"
+            >
+            </dxi-validation-rule>
+            <dxi-validation-rule
+              type="range"
+              [max]="maxDate"
+              message="Invalid maximum date"
+            >
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item
+            dataField="toDate"
+            editorType="dxDateBox"
+            [editorOptions]="{
+              invalidDateMessage:
+              'The date must have the following format: yyyy/MM/dd',
+                disabledDates: dateFilter,
+                placeholder: 'yyyy/MM/dd',
+              displayFormat: 'yyyy/MM/dd'
+            }"
+          >
+            <dxo-label alignment="left">
+            </dxo-label>
+            <dxi-validation-rule
+              type="required"
+              message="To Date is required"
+            >
+            </dxi-validation-rule>
+            <dxi-validation-rule
+              type="range"
+              [min]="minDate"
+              message="Invalid minimum date"
+            >
+            </dxi-validation-rule>
+            <dxi-validation-rule
+              type="range"
+              [max]="maxDate"
+              message="Invalid maximum date"
+            >
+            </dxi-validation-rule>
+
+            <dxi-validation-rule 
+              message="To Date should be greater than From Date" 
+              type= "custom"
+              [reevaluate]= true
+              [validationCallback]="dateRangeValidate"
+            >
+            </dxi-validation-rule>
+
+            <dxi-validation-rule 
+              message="Annual Leave Count Exceeded!" 
+              type= "async"
+              [validationCallback]="isLeaveCountExceeded"
+            >
+              
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item
+            dataField="leaveReason"
+            editorType="dxTextArea"
+            [editorOptions]="{maxLength: '200'}"
+            colSpan="2"
+            cssClass="padding-remove"
+          >
+            <dxo-label template="reasons" alignment="left"></dxo-label>
+
+            <dxi-validation-rule type="required" message="Leave Reason is required">
+
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item
+            dataField="emergencyContact"
+            editorType="dxTextBox"
+            colSpan="2"
+            cssClass="padding-remove"
+          >
+            <dxo-label text="Emergency Contact" alignment="left"></dxo-label>
+
+            <dxi-validation-rule type="required" message="Emergency Contact is required">
+
+            </dxi-validation-rule>
+          </dxi-item>
+
+          <dxi-item
+          dataField="filePath"
+          colSpan="2"
+          cssClass="padding-remove"
+          template="imageUploadTemplate"
+          >
+          <dxo-label text="Attachment" alignment="left"></dxo-label>
+          </dxi-item>
+              
+          <dxi-item colSpan="2" itemType="button" horizontalAlignment="right" [buttonOptions]="buttonOptions">
+
+          </dxi-item>
+
+          
+
+        </dxi-item>
+
+        <div *dxTemplate="let data of 'imageUploadTemplate'">
+          <dx-file-uploader
+            [multiple]="false"
+            [allowedFileExtensions]="['.jpg', '.jpeg', '.png']"
+            uploadMode="useForm"
+            (onValueChanged)="onFileUpload($event)"
+          ></dx-file-uploader>
+          <img class="uploadedImage" *ngIf="isImageUploaded" height=60 width=100 [src]= "editImageUrl"/>
         </div>
-      </mat-card-content>
-    </mat-card>
+
+        <div *dxTemplate="let data of 'reasons'">
+          <div id="template-content">
+            <i id="helpedInfo" class="dx-icon dx-icon-info"></i>
+            Reason
+          </div>
+    
+          <dx-tooltip
+            target="#helpedInfo"
+            showEvent="mouseenter"
+            hideEvent="mouseleave"
+          >
+            <div *dxTemplate="let data = data; of: 'content'">
+              <div id="tooltip-content">
+                This field must not exceed 200 characters
+              </div>
+            </div>
+          </dx-tooltip>
+        </div>
+      </dx-form>
   </form>
 </div>
-
-

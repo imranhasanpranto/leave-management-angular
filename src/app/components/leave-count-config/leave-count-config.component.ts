@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { GlobalConfig } from 'src/app/classes/global-config';
 import { LeaveCountService } from 'src/app/services/leave-count.service';
 
 @Component({
@@ -10,39 +11,46 @@ import { LeaveCountService } from 'src/app/services/leave-count.service';
   styleUrls: ['./leave-count-config.component.css']
 })
 export class LeaveCountConfigComponent implements OnInit{
-  leaveCountForm! : FormGroup;
-  name: string = 'leave-count';
+  
 
-  constructor(
-    private builder: FormBuilder,
-    private leaveCountService: LeaveCountService,
-    private router: Router
-    ){}
+    annualLeaveCountForm: GlobalConfig;
+    annualLeaveCount: number = 22;
+    name: string = 'leave-count';
 
-  ngOnInit(): void {
-    this.leaveCountForm = this.builder.group(
-      {
-        leaveCount: ['', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1), Validators.max(50)]]
+    constructor(
+      private leaveCountService: LeaveCountService,
+      private router: Router
+    ){
+      this.annualLeaveCountForm = {
+        id: -1,
+        configName: "not assigned",
+        configValue: 22
       }
-    );
+    }
 
-    this.leaveCountService.getYearlyLeave(this.name).subscribe(data=>{
-      this.leaveCountForm.get('leaveCount')?.setValue(data.configValue);
-    });
+    buttonOptions: any = {
+      text: 'Update',
+      type: 'success',
+      useSubmitBehavior: true,
+    };
 
-  }
+    ngOnInit(): void {
+      this.leaveCountService.getYearlyLeave(this.name).subscribe(data=>{
+        this.annualLeaveCountForm = data;
+      });
+    }
 
-  update(){
-    if(this.leaveCountForm.valid){
+    onSubmit(params: any){
+      params.preventDefault();
+  
       const leaveCountFormData = new FormData();
       leaveCountFormData.append('configName', this.name);
-      leaveCountFormData.append('configValue', this.leaveCountForm.get('leaveCount')?.value);
+      leaveCountFormData.append('configValue', this.annualLeaveCountForm.configValue as any as string);
 
       this.leaveCountService.updateYearlyLeave(leaveCountFormData).subscribe(response=>{
         console.log('response:', response);
         this.router.navigate(['/requests']);
       })
     }
-  }
 
 }

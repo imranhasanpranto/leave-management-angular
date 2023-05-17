@@ -1,47 +1,31 @@
-<mat-card>
-  <mat-card-title>Login</mat-card-title>
-  <mat-card-content>
-    <form [formGroup]="loginForm" (ngSubmit)="submitForm()" novalidate>
-      <p>
-        <mat-form-field>
-          <input type="text" matInput placeholder="Email" formControlName="email">
-        </mat-form-field>
-        <span class="text-danger" style="display: block;"
-          *ngIf="(email?.touched || isSubmitted) && email?.errors?.['required']">
-          Email is required
-        </span>
-        <span class="text-danger" style="display: block;"
-          *ngIf="email?.touched && email?.errors?.['email']">
-          Enter a valid email address
-        </span>
-      </p>
 
-      <p>
-        <mat-form-field>
-          <input type="password" matInput placeholder="Password" formControlName="password">
-        </mat-form-field>
+<div class="container">
+  <h1 class="title">Login</h1>
+  <form (submit)="onSubmit($event)">
+      <dx-form 
+      id="form"
+      [showValidationSummary]="true"
+      [formData]="loginForm"
+      validationGroup="loginData"
+      >
+          <dxi-item dataField="email" 
+          [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email', mode: 'email' }"
+          editorType="dxTextBox" >
+              <dxi-validation-rule type="required" message="Email is required">
+              </dxi-validation-rule>
+              <dxi-validation-rule type="email" message="Email is invalid">
+              </dxi-validation-rule>
+              <dxo-label [visible]="true"></dxo-label>
+          </dxi-item>
 
-        <span class="text-danger" style="display: block;"
-          *ngIf="(password?.touched || isSubmitted) && password?.errors?.['required']">
-          Password is required
-        </span>
-      </p>
+          <dxi-item dataField="password" [editorOptions]="passwordOptions" editorType="dxTextBox">
+              <dxi-validation-rule type="required" message="Password is required">
+              </dxi-validation-rule>
+          </dxi-item>
+          
+          <dxi-item itemType="button" horizontalAlignment="right" [buttonOptions]="buttonOptions">
 
-      <div *ngIf="error" class="alert alert-danger" role="alert">
-        {{error}}
-      </div>
-
-      <div class="row">
-        <button type="submit" class="btn btn-success">Login</button>
-        <!-- <button
-            type="button"
-            (click)="onReset()"
-            class="btn btn-warning float-right"
-          >
-            Reset
-        </button> -->
-      </div>
-
-    </form>
-  </mat-card-content>
-</mat-card>
+          </dxi-item>
+      </dx-form>
+  </form>
+</div>

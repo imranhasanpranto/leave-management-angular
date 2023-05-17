@@ -10,6 +10,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CalenderComponent } from '../calender/calender.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-leave-requests',
@@ -22,6 +23,7 @@ export class LeaveRequestsComponent implements OnInit{
   isAdmin!: boolean;
   userId!: number;
   searchKey: string = "";
+  imageApiUrl = environment.apiUrl + "/file/get-file/";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -43,9 +45,7 @@ export class LeaveRequestsComponent implements OnInit{
 
   getAllPendingRequests(){
     this.leaveService.getAllLeaveRequests().subscribe((data)=>{
-      this.leaveRequestsMat = new MatTableDataSource(data);
-      this.leaveRequestsMat.paginator = this.paginator;
-      this.leaveRequestsMat.sort = this.sort;
+      this.leaveRequests = data;
     });
   }
 
@@ -126,7 +126,7 @@ export class LeaveRequestsComponent implements OnInit{
   }
 
   updateDataSource(id: number){
-    this.leaveRequestsMat.data = this.leaveRequestsMat.data.filter(req => req.id !== id);
+    this.leaveRequests = this.leaveRequests.filter(req => req.id !== id);
     
   }
 
@@ -149,6 +149,10 @@ export class LeaveRequestsComponent implements OnInit{
       if(result){
       }
     });
+  }
+
+  applyForLeave(){
+    this.router.navigate(["/add-application"]);
   }
 
 }

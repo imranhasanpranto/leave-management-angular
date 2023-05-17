@@ -1,48 +1,42 @@
-<div class="container">
-    
-    <form [formGroup]="leaveCountForm" (ngSubmit)="update()">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>
-                    Annual Leave Count
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="row mb-3">
-                    <div class="">
-                        <!-- <label for="leaveCount" class="form-label">Yearly Leave</label> -->
-                        
-                        <input type="number" mdIn class="form-control " id="leaveCount" formControlName="leaveCount" />
-        
-                        <div *ngIf="leaveCountForm.get('leaveCount')?.invalid && leaveCountForm.get('leaveCount')?.errors && 
-                                ( leaveCountForm.get('leaveCount')?.dirty || leaveCountForm.get('leaveCount')?.touched)
-                            ">
-                            <small class="text-danger"
-                                *ngIf="leaveCountForm.get('leaveCount')?.hasError('required')">
-                                This field is required.
-                            </small>
-                            <small class="text-danger"
-                            *ngIf="leaveCountForm.get('leaveCount')?.hasError('min')">
-                                Minimum value is 1
-                            </small>
-                            <small class="text-danger"
-                            *ngIf="leaveCountForm.get('leaveCount')?.hasError('max')">
-                                Maximum value is 50
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                <div class="row float-end">
-                    <div class="button">
-                        <button type="submit" [disabled]="leaveCountForm.invalid" class="btn btn-success">Update</button>
-                    </div>
-                </div>
-            </mat-card-content>
-            
-            
-            
-        </mat-card>
-    </form>
-        
 
-</div>
+
+
+<div class="container">
+    <h2 class="title">Annual Leave Count</h2>
+    <form (submit)="onSubmit($event)">
+        <dx-form 
+        id="form"
+        [showValidationSummary]="true"
+        [formData]="annualLeaveCountForm"
+        validationGroup="leaveCountData"
+        >
+
+            <dxi-item dataField="configValue" >
+                <dxo-label text="Value"></dxo-label>
+                <dxi-validation-rule
+                    type="required"
+                    message="This field is required"
+                    >
+                </dxi-validation-rule>
+                <dxi-validation-rule
+                    type="range"
+                    [min]="10"
+                    message="Minimum value is 10"
+                    >
+                </dxi-validation-rule>
+                <dxi-validation-rule
+                    type="range"
+                    [max]="50"
+                    message="Maximum value is 50"
+                    >
+                </dxi-validation-rule>
+            </dxi-item>
+
+           
+            
+            <dxi-item itemType="button" horizontalAlignment="right" [buttonOptions]="buttonOptions">
+  
+            </dxi-item>
+        </dx-form>
+    </form>
+  </div>

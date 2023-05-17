@@ -44,6 +44,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { CalenderComponent } from './components/calender/calender.component';
 import { MatSnackBarModule} from '@angular/material/snack-bar';
 import { CustomErrorHandler } from './services/custom-error-handler.service';
+import { DevExtremeModule } from 'devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { CustomErrorHandler } from './services/custom-error-handler.service';
     MatPaginatorModule,
     MatSortModule,
     FullCalendarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    DevExtremeModule
   ],
   providers: [
   {

@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'search-leave', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'users', component: UsersComponent },
   { path: 'add-application', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },
   { path: 'edit-application/:id', component: LeaveApplicationFormComponent, canActivate:[AuthGuardService] },
   { path: 'users', component: UsersComponent, canActivate:[AuthGuardService] },

@@ -1,77 +1,150 @@
-<div class="container">
-  <mat-toolbar class="mb-3">
-    <span class="fill-remaining-space"></span>
-    <span>Leave Requests</span>
-    <span class="fill-remaining-space"></span>
-  </mat-toolbar>
-  <mat-toolbar class="mat-elevation-z8">
-    <a routerLink="/add-application" >
-      <button mat-raised-button color="primary">
-        <mat-icon>add</mat-icon>Leave Request
-      </button>
-    </a>
 
-    <input matInput class="search-field" [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
 
-  </mat-toolbar>
-  <div>
-    <mat-table mat-table [dataSource]="leaveRequestsMat" matSort class="mat-elevation-z8">
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let request">{{request.userName}}</td>
-      </ng-container>
-      <ng-container matColumnDef="fromDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>From Date</th>
-        <td mat-cell *matCellDef="let request">{{request.fromDate | date}}</td>
-      </ng-container>
-      <ng-container matColumnDef="toDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>To Date</th>
-        <td mat-cell *matCellDef="let request">{{request.toDate | date}}</td>
-      </ng-container>
-      <ng-container matColumnDef="leaveType">
-        <th mat-header-cell *matHeaderCellDef>Leave Type</th>
-        <td mat-cell *matCellDef="let request">{{request.leaveType}}</td>
-      </ng-container>
-      <ng-container matColumnDef="leaveReason">
-        <th mat-header-cell *matHeaderCellDef>Leave Reason</th>
-        <td mat-cell *matCellDef="let request">{{request.leaveReason}}</td>
-      </ng-container>
-      <ng-container matColumnDef="emergencyContact">
-        <th mat-header-cell *matHeaderCellDef>Emergency Contact</th>
-        <td mat-cell *matCellDef="let request">{{request.emergencyContact}}</td>
-      </ng-container>
-      <ng-container matColumnDef="attachment">
-        <th mat-header-cell *matHeaderCellDef>Attachment</th>
-        <td mat-cell *matCellDef="let request">
-          <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="viewOnCalender">
-        <th mat-header-cell *matHeaderCellDef>Calender View</th>
-        <td mat-cell *matCellDef="let request">
-          <button class="btn btn-sm btn-warning" (click)="openCalender(request.id)">
-            <i class="fa fa-calendar"></i></button>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Action</th>
-        <td class="action-td" mat-cell *matCellDef="let request">
-          <button *ngIf="isAdmin" class="btn btn-sm btn-warning" (click)="openDialogue(request.id, 'approve')">
-            <i class="fa fa-check"></i>Approve</button>
-          <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id, 'reject')">
-            <i class="fa fa-remove"></i>Reject</button>
-          <button *ngIf="!isAdmin" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
-            <i class="fa fa-edit"></i>Edit</button>
-          <button *ngIf="!isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id, 'delete')">
-            <i class="fa fa-remove"></i>Cancel</button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
-    </mat-table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons
-      aria-label="Select page of periodic elements">
-    </mat-paginator>
+<div class="container mt-3">
+  <div class="title-bar">
+    <h2>Leave Applications</h2>
   </div>
+  <dx-data-grid
+    id="gridContainer"
+    [dataSource]="leaveRequests"
+    keyExpr="id"
+    [showBorders]="true"
+    [rowAlternationEnabled]="true"
+    [columnAutoWidth] ="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+  >
+
+  <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+    <dxo-paging [pageSize]="5"></dxo-paging>
+    <dxo-pager
+        [visible]="true"
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[5, 10, 20]"
+        [showInfo]="true"
+    >
+    </dxo-pager>
+
+    <dxo-toolbar>
+      <dxi-item location="before">
+        <div *dxTemplate>
+          <dx-button
+            stylingMode="contained"
+            [text]="'Leave Request'"
+            icon="add"
+            type="default"
+            (onClick)="applyForLeave()"
+          >
+          </dx-button>
+        </div>
+      </dxi-item>
+      <dxi-item name="searchPanel" location="after"></dxi-item>
+      <dxi-item name="exportButton" location="after"></dxi-item>
+    </dxo-toolbar>
+
+    <dxo-export 
+      [enabled]="true"
+      [formats]="['xlsx', 'pdf']"
+    >
+    </dxo-export>
+
+    <dxo-search-panel
+    [visible]="true"
+    [width]="300"
+    placeholder="Search"
+    >
+        
+    </dxo-search-panel>
+    
+    <dxi-column dataField="userName" caption="Name" alignment="left"></dxi-column>
+    <dxi-column dataField="fromDate" dataType="date" caption="From Date" alignment="left"></dxi-column>
+    <dxi-column dataField="toDate" sortOrder="desc" dataType="date" caption="To Date" alignment="left"></dxi-column>
+    <dxi-column dataField="leaveType" caption="Leave Type" alignment="left"></dxi-column>
+    <dxi-column dataField="leaveReason" caption="Reason" alignment="left"></dxi-column>
+    <dxi-column dataField="emergencyContact" caption="Emergency Contact" alignment="left"></dxi-column>
+    <dxi-column
+      dataField="filePath"
+      [width]="100"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="cellTemplate"
+      caption="Attachment"
+      alignment="left"
+    ></dxi-column>
+
+    <dxi-column
+      dataField="id"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="calenderTemplate"
+      caption="Calender View"
+      alignment="left"
+    ></dxi-column>
+
+    <dxi-column
+      dataField="id"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="actionTemplate"
+      caption="Action"
+      alignment="left"
+    ></dxi-column>
+
+    <div *dxTemplate="let data of 'cellTemplate'">
+      <img height=60 width=100 src= "{{imageApiUrl}}{{data.value}}" />
+    </div>
+
+    <div *dxTemplate="let data of 'calenderTemplate'">
+      <dx-button
+            stylingMode="contained"
+            icon="event"
+            type="default"
+            (onClick)="openCalender(data.value)"
+          >
+          </dx-button>
+    </div>
+
+    <div *dxTemplate="let data of 'actionTemplate'">
+      <div class="dx-field" *ngIf="isAdmin">
+        <dx-button
+              stylingMode="contained"
+              text="Approve"
+              icon="check"
+              type="default"
+              (onClick)="openDialogue(data.value, 'approve')"
+            >
+        </dx-button>
+      </div>
+      <div class="dx-field" *ngIf="isAdmin">
+        <dx-button
+              stylingMode="contained"
+              text="Reject"
+              icon="clear"
+              type="default"
+              (onClick)="openDialogue(data.value, 'reject')"
+            >
+        </dx-button>
+      </div>
+      <div class="dx-field" *ngIf="!isAdmin">
+        <dx-button
+              stylingMode="contained"
+              text="Edit"
+              icon="edit"
+              type="default"
+              (onClick)="editRequest(data.value)"
+            >
+        </dx-button>
+      </div>
+      <div class="dx-field" *ngIf="!isAdmin">
+        <dx-button
+              stylingMode="contained"
+              text="Cancel"
+              icon="trash"
+              type="default"
+              (onClick)="openDialogue(data.value, 'delete')"
+            >
+        </dx-button>
+    </div>
+    </div>
+  </dx-data-grid>
 </div>

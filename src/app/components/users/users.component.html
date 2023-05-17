@@ -1,6 +1,50 @@
-<h2>Users</h2>
-<ul>
-    <li *ngFor="let user of users">
-        {{user.name}}
-    </li>
-</ul>
+<div class="container mt-3">
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="users"
+      keyExpr="id"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      [columnAutoWidth] ="true"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+    >
+  
+      <dxo-scrolling columnRenderingMode="virtual">
+  
+      </dxo-scrolling>
+      <dxo-paging [pageSize]="5">
+  
+      </dxo-paging>
+      <dxo-pager
+          [visible]="true"
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[5, 10, 20]"
+          [showInfo]="true"
+      >
+      </dxo-pager>
+  
+      <dxo-toolbar>
+        <dxi-item name="searchPanel" location="after"></dxi-item>
+        <dxi-item name="exportButton" location="after"></dxi-item>
+      </dxo-toolbar>
+      <dxo-export 
+        [enabled]="true"
+        [formats]="['xlsx', 'pdf']"
+      >
+      </dxo-export>
+  
+      <dxo-search-panel
+      [visible]="true"
+      [width]="300"
+      placeholder="Search"
+      >
+          
+      </dxo-search-panel>
+      
+      <dxi-column dataField="name" caption="Name" alignment="left"></dxi-column>
+      <dxi-column dataField="email" caption="Email" alignment="left"></dxi-column>
+      <dxi-column dataField="role" caption="Type" alignment="left"></dxi-column>
+      
+    </dx-data-grid>
+  </div>

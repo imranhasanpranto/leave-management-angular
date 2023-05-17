@@ -1,53 +1,128 @@
-<div class="container">
+<div class="container mt-3">
+  <dx-data-grid
+    id="gridContainer"
+    [dataSource]="leaveRequests"
+    keyExpr="id"
+    [showBorders]="true"
+    [rowAlternationEnabled]="true"
+    [columnAutoWidth] ="true"
+    [allowColumnReordering]="true"
+    [allowColumnResizing]="true"
+  >
 
-  <mat-toolbar class="search-block ">
-    <mat-toolbar-row style="padding: 0 5px;">
+    <dxo-scrolling columnRenderingMode="virtual">
 
-      <a routerLink="/add-application">
-        <button class="btn btn-md btn-outline-primary">
-          <i class="fa fa-plus"></i>Leave Request</button>
-      </a>
-      <input class="search-control col-lg-4" type="text" placeholder="Search" [(ngModel)]="searchText">
-    </mat-toolbar-row>
-  </mat-toolbar>
+    </dxo-scrolling>
+    <dxo-paging [pageSize]="5">
 
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th [appSort]="leaveRequests" data-type="string" data-name="userName" data-order="asc">Name <i  class="fa fa-arrow-up sort-by-userName" aria-hidden="true"></i></th>
-        <th [appSort]="leaveRequests" data-type="date" data-name="fromDate" data-order="asc">From date <i class="fa fa-arrow-up sort-by-fromDate" aria-hidden="true"></i></th>
-        <th [appSort]="leaveRequests" data-type="date" data-name="toDate" data-order="asc">To date <i class="fa fa-arrow-up sort-by-toDate" aria-hidden="true"></i></th>
-        <th>Leave type</th>
-        <th>Reason</th>
-        <th>Emergency contact</th>
-        <th>Attachment</th>
-        <th>Calender View</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let request of leaveRequests | filter: searchText">
-        <td><span>{{request.userName}}</span></td>
-        <td><span>{{request.fromDate | date}}</span></td>
-        <td><span>{{request.toDate | date}}</span></td>
-        <td><span>{{request.leaveType}}</span></td>
-        <td><span>{{request.leaveReason}}</span></td>
-        <td><span>{{request.emergencyContact}}</span></td>
-        <!-- <td></td> -->
-        <td>
-          <img *ngIf="request.filePath" src="http://localhost:8080/api/file/get-file/{{request.filePath}}" height=60 width=100 />
-        </td>
-        <td>
-          <button class="btn btn-sm btn-warning" (click)="openCalender(request.id)">
-            <i class="fa fa-calendar"></i></button>
-        </td>
-        <td>
-          <button *ngIf="userId == request.userId" class="btn btn-sm btn-warning" (click)="editRequest(request.id)">
-            <i class="fa fa-edit"></i>Edit</button>
-          <button *ngIf="userId == request.userId || isAdmin" class="btn btn-sm btn-danger" (click)="openDialogue(request.id)">
-            <i class="fa fa-remove"></i>Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    </dxo-paging>
+    <dxo-pager
+        [visible]="true"
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[5, 10, 20]"
+        [showInfo]="true"
+    >
+    </dxo-pager>
+
+    <dxo-toolbar>
+      <dxi-item location="before">
+        <div *dxTemplate>
+          <dx-button
+            stylingMode="contained"
+            [text]="'Leave Request'"
+            icon="add"
+            type="default"
+            (onClick)="applyForLeave()"
+          >
+          </dx-button>
+        </div>
+      </dxi-item>
+      <dxi-item name="searchPanel" location="after"></dxi-item>
+      <dxi-item name="exportButton" location="after"></dxi-item>
+    </dxo-toolbar>
+    <dxo-export 
+      [enabled]="true"
+      [formats]="['xlsx', 'pdf']"
+    >
+    </dxo-export>
+
+    <dxo-search-panel
+    [visible]="true"
+    [width]="300"
+    placeholder="Search"
+    >
+        
+    </dxo-search-panel>
+    
+    <dxi-column dataField="userName" caption="Name" alignment="left"></dxi-column>
+    <dxi-column dataField="fromDate" dataType="date" caption="From Date" alignment="left"></dxi-column>
+    <dxi-column dataField="toDate" sortOrder="desc" dataType="date" caption="To Date" alignment="left"></dxi-column>
+    <dxi-column dataField="leaveType" caption="Leave Type" alignment="left"></dxi-column>
+    <dxi-column dataField="leaveReason" caption="Reason" alignment="left"></dxi-column>
+    <dxi-column dataField="emergencyContact" caption="Emergency Contact" alignment="left"></dxi-column>
+    <dxi-column
+      dataField="filePath"
+      [width]="100"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="imageTemplate"
+      caption="Attachment"
+      alignment="left"
+    ></dxi-column>
+
+    <dxi-column
+      dataField="id"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="calenderTemplate"
+      caption="Calender View"
+      alignment="left"
+    ></dxi-column>
+
+    <dxi-column
+      dataField="id"
+      [allowFiltering]="false"
+      [allowSorting]="false"
+      cellTemplate="actionTemplate"
+      caption="Action"
+      alignment="left"
+    ></dxi-column>
+
+    <div *dxTemplate="let data of 'imageTemplate'">
+      <img height=60 width=100 src= "{{imageApiUrl}}{{data.value}}" />
+    </div>
+
+    <div *dxTemplate="let data of 'calenderTemplate'">
+      <dx-button
+            stylingMode="contained"
+            icon="event"
+            type="default"
+            (onClick)="openCalender(data.value)"
+          >
+          </dx-button>
+    </div>
+
+    <div *dxTemplate="let data of 'actionTemplate'">
+      <div class="dx-field">
+        <dx-button
+              stylingMode="contained"
+              text="Edit"
+              icon="edit"
+              type="default"
+              (onClick)="editRequest(data.value)"
+            >
+        </dx-button>
+      </div>
+      <div class="dx-field">
+        <dx-button
+              stylingMode="contained"
+              text="Delete"
+              icon="trash"
+              type="default"
+              (onClick)="openDialogue(data.value)"
+            >
+        </dx-button>
+    </div>
+    </div>
+  </dx-data-grid>
 </div>

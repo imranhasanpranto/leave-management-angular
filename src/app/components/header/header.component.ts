@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -12,7 +13,7 @@ export class HeaderComponent {
   isLoggedInRoleAdmin$!: Observable<boolean>;
   isAdmin!: boolean;
 
-  constructor(private authService: AuthenticationService){}
+  constructor(private authService: AuthenticationService, private router: Router){}
 
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn;
@@ -22,5 +23,9 @@ export class HeaderComponent {
 
   logout(){
     this.authService.logOut();
+  }
+
+  loadPage(pageUrl: string){
+    this.router.navigate([pageUrl]);
   }
 }

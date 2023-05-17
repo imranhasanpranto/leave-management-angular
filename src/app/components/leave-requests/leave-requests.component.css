@@ -1,33 +1,19 @@
-.image-preview {
-    width: 200px;
-    height: 200px;
-    position: relative;
-    border-radius: 100%;
-    overflow: hidden;
-    border: 12px solid #fff;
-    -webkit-box-shadow: 0 0 45px rgba(0, 0, 0, .2);
-    -moz-box-shadow: 0 0 45px rgba(0, 0, 0, .2);
-    box-shadow: 0 0 45px rgba(0, 0, 0, .2);
+
+
+
+   ::ng-deep .dx-field {
+    display: inline-block;
+    margin-right: 20px;
   }
 
-  .fill-remaining-space {
-    flex: 1 1 auto;
+  ::ng-deep #gridContainer {
+    box-shadow: 3px 3px 5px 5px #ccc;
+    padding: 10px;
   }
 
-  .search-div{
-    margin: 10px;
+  .title-bar {
+    text-align: center;
+    box-shadow: 3px 3px 5px 5px #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
   }
-
-  .search-field{
-    width: 70%;
-    margin-left: 10px;
-  }
-
-  .action-td{
-    white-space: nowrap; 
-    vertical-align: middle;
-  }
-
-  ::ng-deep .mat-sort-header-arrow {
-    opacity: 1 !important;
-   }

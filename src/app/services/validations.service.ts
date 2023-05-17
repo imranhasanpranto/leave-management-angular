@@ -10,7 +10,7 @@ import { LeaveApplicationService } from './leave-application.service';
 })
 export class ValidationsService {
 
-  constructor(private userService: UserService) { }
+  constructor() { }
 
 
 
@@ -48,6 +48,48 @@ export class ValidationsService {
           )
         );
     };
+  }
+
+  isUserNameTaken(email: string, userService: UserService){
+    const promise = new Promise<void>((resolve, reject) => {
+      userService.isUserNameTaken(email).subscribe({
+        next: (res: any) => {
+          if(res.status){
+            reject();
+          }else{
+            resolve();
+          }
+        },
+        error: (err: any) => {
+          reject(err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    });
+    return promise;
+  }
+
+  isLeaveCountExceeded(fromDate: Date, toDate: Date, id: number, leaveService: LeaveApplicationService){
+    const promise = new Promise<void>((resolve, reject) => {
+      leaveService.isAnnualLeaveCountExceeds(Date.parse(fromDate.toDateString()), Date.parse(toDate.toDateString()), id).subscribe({
+        next: (res: any) => {
+          if(res.status){
+            reject();
+          }else{
+            resolve();
+          }
+        },
+        error: (err: any) => {
+          reject(err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    });
+    return promise;
   }
 
   leaveCountValidator(leaveService: LeaveApplicationService, id: number): AsyncValidatorFn {

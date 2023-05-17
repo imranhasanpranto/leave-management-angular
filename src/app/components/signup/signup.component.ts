@@ -1,91 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ValidationsService } from 'src/app/services/validations.service';
+import { DxFormComponent } from 'devextreme-angular';
+import notify from 'devextreme/ui/notify';
+import { UserCacheServiceService } from 'src/app/services/user-cache-service.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
+  providers: [UserService]
 })
 export class SignupComponent implements OnInit{
-  user: User = {
-    id: -1,
-    name: "pranto",
-    email: "pranto@gmail.com",
-    password: "1234",
-    userType: 1
-  };
+  @ViewChild(DxFormComponent, { static: false }) form!: DxFormComponent;
+  signupForm: any= {}
 
   constructor(private formBuilder: FormBuilder, 
     private userService: UserService, 
     private authService: AuthenticationService,
     private router: Router,
-    private validationService: ValidationsService
+    private validationService: ValidationsService,
+    private cacheUser: UserCacheServiceService
     ){}
 
-  form!: FormGroup;
   isSubmitted: boolean = false;
   invalidLogin: boolean = false;
   error: string | null = null;
   isRegistrationSuccessful: boolean = false;
 
   ngOnInit(): void {
-    this.form = this.formBuilder.group(
-      {
-        name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email], [this.validationService.userNameValidator(this.userService)]],
-        password: ['', Validators.required]
-      }
-    );  
+    
   }
 
-  get name(){
-    return this.form.get('name');
+  namePattern: any = /^[^0-9]+$/;
+
+  buttonOptions: any = {
+    text: 'Login',
+    type: 'success',
+    useSubmitBehavior: true,
+  };
+
+  passwordOptions: any = {
+    stylingMode: 'filled',
+    placeholder: 'Password',
+    mode: 'password'
   }
 
-  get email(){
-    return this.form.get('email');
+  asyncValidation = (params: any) =>{
+    return this.validationService.isUserNameTaken(params.value, this.userService);
   }
 
-  get password(){
-    return this.form.get('password');
-  }
+  onSubmit(params: any){
+    params.preventDefault();
 
-  submitForm(){
     this.isSubmitted = true;
-    console.log(this.form.value);
-    if(this.form.invalid){
-      return;
-    }
 
     this.authService
-    .save(this.name?.value, this.email?.value, this.password?.value)
+    .save(this.signupForm.name, this.signupForm.email, this.signupForm.password)
     .subscribe(
       data=>{
-        //this.router.navigate(['login'])
         this.invalidLogin = false
         this.isRegistrationSuccessful = true;
+        console.log("isRegistrationSuccessful:", this.isRegistrationSuccessful);
         this.isSubmitted = false;
-        this.form.reset();
-        console.log('registration successfull: ', data);
+        this.form.instance.resetValues();
+        this.cacheUser.clearCache();
       },
       error=>{
         this.invalidLogin = true
-        console.log('authentication error: ', error);
         this.error = error;
+        notify({ message: error, width: 300, shading: true }, "error", 1000);
       }
     )
   }
 
   onReset(): void {
     this.isSubmitted = false;
-    this.form.reset();
+    this.form.instance.resetValues();
   }
-
-  
 }

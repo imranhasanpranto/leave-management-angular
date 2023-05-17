@@ -2,11 +2,17 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DxFormComponent } from 'devextreme-angular';
+import dxDateBox from 'devextreme/ui/date_box';
+import { ValueChangedEvent } from 'devextreme/ui/file_uploader';
 import * as _moment from 'moment';
 import { Moment } from 'moment';
 import { first } from 'rxjs';
+import { LeaveApplication } from 'src/app/classes/leave-application';
 import { LeaveApplicationService } from 'src/app/services/leave-application.service';
+import { UserService } from 'src/app/services/user.service';
 import { ValidationsService } from 'src/app/services/validations.service';
+import { environment } from 'src/environments/environment';
 
 const moment = _moment;
 
@@ -16,36 +22,49 @@ const moment = _moment;
   styleUrls: ['./leave-application-form.component.css']
 })
 export class LeaveApplicationFormComponent implements OnInit{
-  leaveForm!: FormGroup;
-  minDate!: Moment;
-  maxDate!: Moment;
+  
+  @ViewChild(DxFormComponent, { static: false }) form!:DxFormComponent;
+  leaveApplicationForm: LeaveApplication;
+  minDate: Date = new Date();
+  maxDate: Date = new Date();
 
-  leaveDates: Date[] = []
   blockedDates: Number[] = [];
-
 
   id: string = '';
   idValue: number = -1;
   isAddMode: boolean = true;
   isFileUpdated: boolean = false;
-  imageUrl = '';
+  leaveApplicationDTO: FormData = new FormData();
 
-  @ViewChild('attachment', { static : false}) fileInput! : ElementRef;
+  editImageUrl: string = environment.apiUrl + "/file/get-file/";
+  isImageUploaded: boolean = false;
 
-  leaveType: any[] = [
-    {value: 'Casual', text: 'Casual'},
-    {value: 'Sick', text: 'Sick'}
+  leaveType: string[] = [
+    'Casual',
+    'Sick'
   ]
 
-  selectedLeave = '';
-
   constructor(
-    private formBuilder: FormBuilder, 
     private validator: ValidationsService,
     private leaveService: LeaveApplicationService,
     private router: Router,
     private route: ActivatedRoute
-    ){}
+  ){
+    this.leaveApplicationForm = {
+      id: -1,
+      userId: -1,
+      userName: "",
+      fromDate: null,
+      toDate: null,
+      leaveReason: '',
+      emergencyContact: '',
+      leaveType: '',
+      filePath: '',
+      applicationStatus: '',
+      attachment: {} as File,
+      isFileUpdated: false
+    }
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -56,155 +75,115 @@ export class LeaveApplicationFormComponent implements OnInit{
 
     this.leaveService.getAllLeaveDates(dataId).subscribe(list => 
       {
-        this.leaveDates = list;
         this.blockedDates = list.map(day=> new Date(day).valueOf());
       });
 
     const currentYear = moment().year();
-    // this.minDate = moment().add(1,'days');
-    this.minDate = moment([currentYear , 0, 1]);
-    this.maxDate = moment([currentYear, 11, 31]);
-
-    this.leaveForm = this.formBuilder.group(
-      {
-        fromDate:['', [Validators.required]],
-        toDate: ['', [Validators.required]],
-        leaveType: ['', Validators.required],
-        leaveReason: [''],
-        emergencyContact: [''],
-        attachment: ['']
-      },
-      {
-        // validator: [this.validator.groupValidator('fromDate', 'toDate')],
-        asyncValidators: [this.validator.leaveCountValidator(this.leaveService, this.idValue)]
-        // validator: Validators.composeAsync(
-        //   [(control:AbstractControl) => Promise.resolve(this.validator.groupValidator('fromDate', 'toDate'))]),
-        // asyncValidators: [this.validator.leaveCountValidator(this.leaveService, this.idValue)]
-        // asyncValidators: Validators.composeAsync(
-        //   [(control:AbstractControl) => Promise.resolve(this.validator.groupValidator('fromDate', 'toDate')), 
-        //   this.validator.leaveCountValidator(this.leaveService, this.idValue)]
-        //   )
-      }
-    )
+    this.minDate = new Date(this.minDate.getFullYear(), 0, 1);
+    this.maxDate = new Date(this.minDate.getFullYear(), 11, 31);
 
     if(!this.isAddMode){
       this.leaveService.getLeaveRequestById(this.id as any)
       .pipe(first())
       .subscribe(x=>{
-        //this.leaveForm.patchValue(x);
+        this.leaveApplicationForm = x;
 
-        this.leaveForm.get('fromDate')?.patchValue(moment(new Date(x.fromDate)));
-        this.leaveForm.get('toDate')?.patchValue(moment(new Date(x.toDate)));
-        this.leaveForm.get('leaveType')?.patchValue(x.leaveType);
-        this.leaveForm.get('leaveReason')?.patchValue(x.leaveReason);
-        this.leaveForm.get('emergencyContact')?.patchValue(x.emergencyContact);
-        this.imageUrl = "http://localhost:8080/api/file/get-file/"+x.filePath;
+        this.leaveApplicationForm.fromDate = this.formatDate(this.leaveApplicationForm.fromDate as string);
+        this.leaveApplicationForm.toDate = this.formatDate(this.leaveApplicationForm.toDate as string);
 
-        if(x.filePath !== null && x.filePath !== ""){
-
-          //this.leaveService.getFileByPath(x.filePath).subscribe(data=>);
-
-          //let fileName = x.filePath.split("/")[1].split("_")[1];
-          let rawFileName = x.filePath.split("/")[1];
-          let splitPos = rawFileName.indexOf("_");
-          let fileName = rawFileName.substring(splitPos+1);
-          const data = new ClipboardEvent('').clipboardData || new DataTransfer();
-          data.items.add(new File([], fileName));
-          this.fileInput.nativeElement.files = data.files;
-          // this.fileInput.nativeElement.value = data.files[0];
-
-          this.leaveForm.get('attachment')?.setValue(data.files[0]);
+        this.editImageUrl = this.editImageUrl + this.leaveApplicationForm.filePath;
+        if(x.filePath){
+          this.isImageUploaded = true;
         }
-        
       });
     }
   }
 
-  onSubmit(){
-    console.log(this.leaveForm.value);
-    if(this.isAddMode){
-      this.leaveApplicationAdd();
-    }else{
-      this.leaveApplicationUpdate();
-    }
-    
+  formatDate(date: string): Date{
+    const initialFormat = "yyyy-MM-DD";
+    return moment(date, initialFormat).toDate();
   }
 
-  leaveApplicationUpdate(){
-    
-    const leaveApplicationDTO: FormData = this.getFormData();
-    leaveApplicationDTO.append("id", this.id);
-    this.leaveService.updateLeaveApplication(leaveApplicationDTO).subscribe(response=>{
-      console.log('save successful', response);
-      this.router.navigate(['requests']);
-    },
-    error=>{
-      this.router.navigate(['requests']);
-    }
-    );
-  }
+  buttonOptions: any = {
+    text: 'Submit',
+    type: 'success',
+    useSubmitBehavior: true,
+  };
 
-  leaveApplicationAdd(){
-    
-    const leaveApplicationDTO: FormData = this.getFormData();
-    this.leaveService.saveLeaveApplication(leaveApplicationDTO).subscribe(response=>{
-      console.log('save successful', response);
-      this.router.navigate(['requests']);
-    },
-    error=>{
-      this.router.navigate(['requests']);
-    }
-    );
-  }
-
-  getFormData(): FormData{
+  onSubmit(params: any){
+    params.preventDefault();
     const formatDate = "YYYY-MM-DD HH:mm:ss";
-    const leaveApplicationDTO: FormData = new FormData();
-    leaveApplicationDTO.append('fromDate', this.leaveForm.get('fromDate')?.value.format(formatDate));
-    leaveApplicationDTO.append('toDate', this.leaveForm.get('toDate')?.value.format(formatDate));
-    leaveApplicationDTO.append('leaveType', this.leaveForm.get('leaveType')?.value);
-    leaveApplicationDTO.append('leaveReason', this.leaveForm.get('leaveReason')?.value);
-    leaveApplicationDTO.append('emergencyContact', this.leaveForm.get('emergencyContact')?.value);
-    leaveApplicationDTO.append('leaveType', this.leaveForm.get('leaveType')?.value);
-    leaveApplicationDTO.append('isFileUpdated', this.isFileUpdated? 'true': 'false');
-    console.log('attachment: ', this.leaveForm.get('attachment')?.value);
-    if(this.leaveForm.get('attachment')?.value){
-      leaveApplicationDTO.append("file", this.leaveForm.get('attachment')?.value);
-    }
-    return leaveApplicationDTO;
-  }
+    let fromDate = moment(this.leaveApplicationForm.fromDate);
+    let toDate = moment(this.leaveApplicationForm.toDate);
 
-  onReset(){
-    this.leaveForm.reset();
-  }
+    this.leaveApplicationDTO.append('fromDate', fromDate.format(formatDate));
+    this.leaveApplicationDTO.append('toDate', toDate.format(formatDate));
+    this.leaveApplicationDTO.append('leaveType', this.leaveApplicationForm.leaveType as any as string);
+    this.leaveApplicationDTO.append('leaveReason', this.leaveApplicationForm.leaveReason as any as string);
+    this.leaveApplicationDTO.append('emergencyContact', this.leaveApplicationForm.emergencyContact as any as string);
+    this.leaveApplicationDTO.append('isFileUpdated', this.isFileUpdated? 'true': 'false');
 
-  selectFile(event: Event){
-    let fileList = (event.target as HTMLInputElement).files;
-    this.isFileUpdated = true;
-    if(fileList && fileList.length > 0){
-      this.leaveForm.get('attachment')?.setValue(fileList[0]);
-      var reader = new FileReader();
-
-      reader.readAsDataURL(fileList[0]); // read file as data url
-
-      reader.onload = (event) => { // called once readAsDataURL is completed
-        this.imageUrl = event.target?.result as string;
-      }
+    if(this.isAddMode){
+      this.leaveService.saveLeaveApplication(this.leaveApplicationDTO).subscribe(response=>{
+          this.router.navigate(['requests']);
+        },
+        error=>{
+          this.router.navigate(['requests']);
+        }
+      );
     }else{
-      this.leaveForm.get('attachment')?.setValue(null);
-      this.imageUrl = '';
+      this.leaveApplicationDTO.append("id", this.id);
+      this.leaveService.updateLeaveApplication(this.leaveApplicationDTO).subscribe(response=>{
+          this.router.navigate(['requests']);
+        },
+        error=>{
+          this.router.navigate(['requests']);
+        }
+      );
     }
+    
+  }
+
+  dateRangeValidate = (date: any) => {
+    let fromDate = this.form.instance.option('formData').fromDate;
+    let toDate = date.value;
+    let status = fromDate && toDate && fromDate.getDate() <= toDate.getDate();
+    return status;
   }
 
 
-  dateFilter: (date: Moment | null) => boolean =
-    (date: Moment | null) => {
-      if(!date){
+  dateFilter: (dateOb: DateObject | null) => boolean =
+    (dateOb: DateObject | null) => {
+      if(!dateOb){
         return true;
       }
-      const day = date?.day();
-      const baseValue = new Date(date.format("yyyy-MM-DD")).valueOf();
-      return (!this.blockedDates.includes(baseValue)) && day !== 0 && day !== 6;
+      const day = dateOb.date.getDay();
+      const momentDate = moment(dateOb.date);
+      const baseValue = new Date(momentDate.format("yyyy-MM-DD")).valueOf();
+      return this.blockedDates.includes(baseValue) || day == 0 || day == 6;
   }
 
+  isLeaveCountExceeded = (params: any) =>{
+    let fromDate = this.form.instance.option('formData').fromDate;
+    let toDate = params.value;
+    return this.validator.isLeaveCountExceeded(fromDate, toDate, this.idValue, this.leaveService);
+  }
+  
+  onFileUpload(file: ValueChangedEvent){
+    this.isFileUpdated = true;
+    this.leaveApplicationDTO.append("file", file.value![0]);
+    this.isImageUploaded = true;
+
+    var reader = new FileReader();
+    reader.readAsDataURL(file.value![0]);
+    reader.onload = (event) => {
+      this.editImageUrl = event.target?.result as string;
+    }
+  }
+}
+
+interface DateObject{
+  component: dxDateBox,
+  date: Date,
+  view: String
 }

@@ -1,0 +1,9 @@
+::ng-deep .dx-field {
+    display: inline-block;
+    margin-right: 20px;
+  }
+
+  ::ng-deep #gridContainer {
+    box-shadow: 3px 3px 5px 5px #ccc;
+    padding: 10px;
+  }

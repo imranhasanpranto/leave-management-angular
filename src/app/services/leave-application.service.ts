@@ -70,7 +70,6 @@ export class LeaveApplicationService {
   }
 
   public isAnnualLeaveCountExceeds(fromDate: number, toDate: number, id: number):Observable<any>{
-    console.log('fromDate:', fromDate, ' toDate:', toDate, ' id:', id);
     return this.http.get<any>(`${this.url}/isAnnualLeaveCountExceeds/${fromDate}/${toDate}/${id}`);
    }
 

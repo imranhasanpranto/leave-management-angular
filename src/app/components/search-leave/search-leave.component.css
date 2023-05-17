@@ -1,14 +1,9 @@
-/* 
-.search-block {
-    width: 0%;
-    right: 0;
-    background: #fff;
-}
-.search-block .search-control {
-    flex: 1;
-    font-size: 1rem;
-    border: 0;
-    outline: none;
-    padding-left: 10px;
-    background: #fff;
-} */
+::ng-deep .dx-field {
+    display: inline-block;
+    margin-right: 20px;
+  }
+
+  ::ng-deep #gridContainer {
+    box-shadow: 3px 3px 5px 5px #ccc;
+    padding: 10px;
+  }

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/classes/user';
 import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
+import { DxFormComponent } from 'devextreme-angular';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-login',
@@ -14,46 +16,37 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit{
 
   invalidLogin = false;
-  users: User[] = [];
   error: string | null = null;
 
+  @ViewChild(DxFormComponent, { static: false }) form!: DxFormComponent;
+  loginForm: any= {}
+
   constructor(
-    private formBuilder: FormBuilder, 
-    private userService: UserService,
     private authService: AuthenticationService,
     private router: Router
-    ){}
-  loginForm!: FormGroup;
-  isSubmitted: boolean = false;
+  ){}
 
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group(
-      {
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required]
-      }
-    );  
-
-
+    
   }
 
-  get email(){
-    return this.loginForm.get('email');
+  buttonOptions: any = {
+    text: 'Login',
+    type: 'success',
+    useSubmitBehavior: true,
+  };
+
+  passwordOptions: any = {
+    stylingMode: 'filled',
+    placeholder: 'Password',
+    mode: 'password'
   }
 
-  get password(){
-    return this.loginForm.get('password');
-  }
+  onSubmit(params: any){
+    params.preventDefault();
 
-  submitForm(){
-    console.log(this.loginForm.value);
-    this.isSubmitted = true;
-    if(this.loginForm.invalid){
-      console.log('invalid form');
-      return;
-    }
     this.authService
-    .authenticate(this.email?.value, this.password?.value)
+    .authenticate(this.loginForm.email, this.loginForm.password)
     .subscribe(
       data=>{
         this.router.navigate(['/requests'])
@@ -63,17 +56,9 @@ export class LoginComponent implements OnInit{
       error=>{
         this.invalidLogin = true
         this.error = error;
+        notify({ message: error, width: 300, shading: true }, "error", 1000);
       }
     )
-  }
-
-  onReset(): void {
-    this.isSubmitted = false;
-    this.loginForm.reset();
-  }
-
-  getAllUsers(){
-    this.userService.getAllUsers().subscribe(data=>this.users = data);
   }
   
 }

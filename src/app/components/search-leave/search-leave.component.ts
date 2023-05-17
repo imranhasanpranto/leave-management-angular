@@ -8,6 +8,7 @@ import { CalenderComponent } from '../calender/calender.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformDialogComponent } from '../conform-dialog/conform-dialog.component';
 import { DialogData } from 'src/app/classes/dialog-data';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-search-leave',
@@ -17,6 +18,7 @@ import { DialogData } from 'src/app/classes/dialog-data';
 export class SearchLeaveComponent implements OnInit{
   leaveRequests: LeaveApplication[] = [];
   searchText: string = "";
+  imageApiUrl = environment.apiUrl + "/file/get-file/";
 
   userId: number = -1;
   isAdmin: boolean = false;
@@ -43,7 +45,6 @@ export class SearchLeaveComponent implements OnInit{
 
   cancelRequest(requestId: number){
     this.leaveService.cancelRequest(requestId).subscribe(message=>{
-      console.log(message);
       this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
     });
   }
@@ -71,6 +72,7 @@ export class SearchLeaveComponent implements OnInit{
 
 
   openDialogue(id: number){
+    console.log('called');
     let data: DialogData = {
       title: 'Delete Request',
       message: 'Are you sure to delete the request?', 
@@ -89,6 +91,10 @@ export class SearchLeaveComponent implements OnInit{
         this.cancelRequest(id);
       }
     });
+  }
+
+  applyForLeave(){
+    this.router.navigate(["/add-application"]);
   }
 
 }
