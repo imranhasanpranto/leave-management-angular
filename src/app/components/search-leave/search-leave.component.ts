@@ -39,11 +39,11 @@ export class SearchLeaveComponent implements OnInit{
     this.leaveService.getAllApprovedLeaveRequests().subscribe((data)=>this.leaveRequests = data);
   }
 
-  editRequest(requestId: number){
+  editRequest(requestId: number|string){
     this.router.navigate([`edit-application/${requestId}`]);
   }
 
-  cancelRequest(requestId: number){
+  cancelRequest(requestId: number|string){
     this.leaveService.cancelRequest(requestId).subscribe(message=>{
       this.leaveRequests = this.leaveRequests.filter(req => req.id !== requestId);
     });
@@ -71,7 +71,7 @@ export class SearchLeaveComponent implements OnInit{
   }
 
 
-  openDialogue(id: number){
+  openDialogue(id: number|string){
     console.log('called');
     let data: DialogData = {
       title: 'Delete Request',

@@ -72,15 +72,9 @@ export class AuthenticationService {
     )
   }
 
-  // expirationCounter(timeout: number) {
-  //   this.tokenSubscription.unsubscribe();
-  //   this.tokenSubscription = of(null).pipe(delay(timeout)).subscribe((expired) => {
-  //     console.log('EXPIRED!!');
-
-  //     this.logOut();
-  //     this.router.navigate(["/login"]);
-  //   });
-  // }
+  public isUserNameTaken(userName: string):Observable<any>{
+    return this.http.get<any>(`${AUTH_API}isUserEmailTaken/${userName}`);
+   }
 
   public save(name: string, email: string, password: string): Observable<AuthResponse>{
     return this.http.post<AuthResponse>(AUTH_API + 'register', {

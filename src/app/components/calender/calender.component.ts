@@ -10,7 +10,7 @@ import { LeaveDaysService } from 'src/app/services/leave-days.service';
   styleUrls: ['./calender.component.css']
 })
 export class CalenderComponent implements OnInit{
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number}, private leaveDaysService: LeaveDaysService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number|string}, private leaveDaysService: LeaveDaysService) { }
   events: any = []
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin],

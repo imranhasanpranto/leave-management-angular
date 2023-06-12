@@ -49,14 +49,14 @@ export class LeaveRequestsComponent implements OnInit{
     });
   }
 
-  approveRequest(requestId: number){
+  approveRequest(requestId: number|string){
     this.leaveService.approveRequest(requestId).subscribe(message=>{
       this.updateDataSource(requestId);
     });
     console.log(requestId);
   }
 
-  openDialogue(id: number, actionName: string){
+  openDialogue(id: number|string, actionName: string){
     let data: DialogData;
 
     if(actionName === 'approve'){
@@ -100,17 +100,17 @@ export class LeaveRequestsComponent implements OnInit{
   }
 
 
-  rejectRequest(requestId: number){
+  rejectRequest(requestId: number|string){
     this.leaveService.rejectRequest(requestId).subscribe(message=>{
       this.updateDataSource(requestId);
     });
   }
 
-  editRequest(requestId: number){
+  editRequest(requestId: number|string){
     this.router.navigate([`edit-application/${requestId}`]);
   }
 
-  cancelRequest(requestId: number){
+  cancelRequest(requestId: number|string){
     this.leaveService.cancelRequest(requestId).subscribe(message=>{
       this.updateDataSource(requestId);
     });
@@ -125,13 +125,13 @@ export class LeaveRequestsComponent implements OnInit{
     this.leaveRequestsMat.filter = this.searchKey.trim().toLowerCase();
   }
 
-  updateDataSource(id: number){
+  updateDataSource(id: number|string){
     this.leaveRequests = this.leaveRequests.filter(req => req.id !== id);
     
   }
 
 
-  openCalender(id: number){
+  openCalender(id: number|string){
     let data = {
       id: id
     }

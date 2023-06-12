@@ -4,6 +4,7 @@ import { FormGroup, AbstractControl, ValidationErrors, AsyncValidatorFn } from '
 import { UserService } from './user.service';
 import { Observable, catchError, map } from 'rxjs';
 import { LeaveApplicationService } from './leave-application.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,22 +38,9 @@ export class ValidationsService {
     }
   }
 
-
-  userNameValidator(userService: UserService): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors|null> => {
-      return userService
-        .isUserNameTaken(control.value)
-        .pipe(
-          map((result) =>
-            result.status ? { usernameAlreadyExists: true } : null
-          )
-        );
-    };
-  }
-
-  isUserNameTaken(email: string, userService: UserService){
+  isUserNameTaken(email: string, authService: AuthenticationService){
     const promise = new Promise<void>((resolve, reject) => {
-      userService.isUserNameTaken(email).subscribe({
+      authService.isUserNameTaken(email).subscribe({
         next: (res: any) => {
           if(res.status){
             reject();
@@ -71,7 +59,7 @@ export class ValidationsService {
     return promise;
   }
 
-  isLeaveCountExceeded(fromDate: Date, toDate: Date, id: number, leaveService: LeaveApplicationService){
+  isLeaveCountExceeded(fromDate: Date, toDate: Date, id: number|string, leaveService: LeaveApplicationService){
     const promise = new Promise<void>((resolve, reject) => {
       leaveService.isAnnualLeaveCountExceeds(Date.parse(fromDate.toDateString()), Date.parse(toDate.toDateString()), id).subscribe({
         next: (res: any) => {

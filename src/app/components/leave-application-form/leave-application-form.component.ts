@@ -31,7 +31,7 @@ export class LeaveApplicationFormComponent implements OnInit{
   blockedDates: Number[] = [];
 
   id: string = '';
-  idValue: number = -1;
+  idValue: number|string = -1;
   isAddMode: boolean = true;
   isFileUpdated: boolean = false;
   leaveApplicationDTO: FormData = new FormData();
@@ -71,7 +71,7 @@ export class LeaveApplicationFormComponent implements OnInit{
     this.idValue = this.id? this.id as any: -1;
     this.isAddMode = !this.id;
 
-    const dataId: number = this.isAddMode?-1: this.id as any;
+    const dataId: number|string = this.isAddMode?-1: this.id as any;
 
     this.leaveService.getAllLeaveDates(dataId).subscribe(list => 
       {
@@ -147,7 +147,11 @@ export class LeaveApplicationFormComponent implements OnInit{
   dateRangeValidate = (date: any) => {
     let fromDate = this.form.instance.option('formData').fromDate;
     let toDate = date.value;
-    let status = fromDate && toDate && fromDate.getDate() <= toDate.getDate();
+    //console.log(fromDate, toDate)
+    fromDate = moment(fromDate).format("yyyy-MM-DD")
+    toDate = moment(toDate).format("yyyy-MM-DD")
+    //let status = fromDate && toDate && fromDate.getDate() <= toDate.getDate();
+    let status = fromDate && toDate && fromDate <= toDate;
     return status;
   }
 

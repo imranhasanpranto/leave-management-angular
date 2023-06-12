@@ -13,6 +13,8 @@ export class HeaderComponent {
   isLoggedInRoleAdmin$!: Observable<boolean>;
   isAdmin!: boolean;
 
+  headerTitle: string = "Leave Management System";
+
   constructor(private authService: AuthenticationService, private router: Router){}
 
   ngOnInit(): void {

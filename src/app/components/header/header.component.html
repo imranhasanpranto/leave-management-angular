@@ -6,7 +6,7 @@
     >
         
         <dxi-item location="before">
-            <h3>Leave Management System</h3>
+            <h3>{{headerTitle}}</h3>
         </dxi-item>
         <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">
             <div *dxTemplate>
@@ -47,12 +47,12 @@
                 (onClick)="loadPage('/annual-leave')"
               >
               </dx-button>
-              <dx-button
+              <!-- <dx-button
                 stylingMode="text"
                 [text]="'Users'"
                 (onClick)="loadPage('/users')"
               >
-              </dx-button>
+              </dx-button> -->
             </div>
         </dxi-item>
         <dxi-item location="after" *ngIf="(isLoggedIn$ | async)">

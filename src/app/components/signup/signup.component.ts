@@ -41,7 +41,7 @@ export class SignupComponent implements OnInit{
   namePattern: any = /^[^0-9]+$/;
 
   buttonOptions: any = {
-    text: 'Login',
+    text: 'SignUp',
     type: 'success',
     useSubmitBehavior: true,
   };
@@ -53,7 +53,7 @@ export class SignupComponent implements OnInit{
   }
 
   asyncValidation = (params: any) =>{
-    return this.validationService.isUserNameTaken(params.value, this.userService);
+    return this.validationService.isUserNameTaken(params.value, this.authService);
   }
 
   onSubmit(params: any){

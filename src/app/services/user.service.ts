@@ -35,10 +35,6 @@ export class UserService {
     return cache$;
    }
 
-   public isUserNameTaken(userName: string):Observable<any>{
-    return this.http.get<any>(`${this.usersUrl}/isUserEmailTaken/${userName}`);
-   }
-
    public test(): boolean{
       return true;
    }

@@ -1,7 +1,7 @@
 
 export class LeaveApplication {
     constructor(
-      public id: number,
+      public id: number|string,
       public userId: number,
       public userName: string,
       public fromDate: string|null|Date,

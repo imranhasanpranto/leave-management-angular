@@ -13,7 +13,7 @@ export class LeaveDaysService {
     this.url = environment.apiUrl+ '/leave-days';
   }
 
-  getLeaveDaysByApplicationId(appId: number): Observable<LeaveDays[]>{
+  getLeaveDaysByApplicationId(appId: number|string): Observable<LeaveDays[]>{
     return this.http.get<LeaveDays[]>(`${this.url}/getLeaveDays/${appId}`);
   }
 }

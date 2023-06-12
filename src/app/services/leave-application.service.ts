@@ -29,7 +29,7 @@ export class LeaveApplicationService {
     return this.http.post<any>(`${this.url}/uploadFile`, data);
   }
 
-  getLeaveRequestById(id: number): Observable<LeaveApplication>{
+  getLeaveRequestById(id: number|string): Observable<LeaveApplication>{
     return this.http.get<LeaveApplication>(`${this.url}/getById/${id}`);
   }
 
@@ -49,15 +49,15 @@ export class LeaveApplicationService {
     return this.http.get<LeaveApplication[]>(`${this.url}/approvedList`);
   }
 
-  approveRequest(requestId: number): Observable<any>{
+  approveRequest(requestId: number|string): Observable<any>{
     return this.http.put<any>(`${this.url}/approve/${requestId}`, {});
   }
 
-  rejectRequest(requestId: number): Observable<any>{
+  rejectRequest(requestId: number|string): Observable<any>{
     return this.http.put<any>(`${this.url}/reject/${requestId}`, {});
   }
 
-  cancelRequest(requestId: number): Observable<any>{
+  cancelRequest(requestId: number|string): Observable<any>{
     return this.http.put<any>(`${this.url}/cancel/${requestId}`, {});
   }
 
@@ -65,11 +65,11 @@ export class LeaveApplicationService {
     return this.http.get<Blob>(`${this.fileUrl}/${path}`, httpOptions);
   }
 
-  getAllLeaveDates(id: number): Observable<Date[]>{
+  getAllLeaveDates(id: number|string): Observable<Date[]>{
     return this.http.get<Date[]>(`${this.url}/getAllLeaveDates/${id}`);
   }
 
-  public isAnnualLeaveCountExceeds(fromDate: number, toDate: number, id: number):Observable<any>{
+  public isAnnualLeaveCountExceeds(fromDate: number, toDate: number, id: number|string):Observable<any>{
     return this.http.get<any>(`${this.url}/isAnnualLeaveCountExceeds/${fromDate}/${toDate}/${id}`);
    }
 

@@ -91,7 +91,7 @@
     ></dxi-column>
 
     <div *dxTemplate="let data of 'cellTemplate'">
-      <img height=60 width=100 src= "{{imageApiUrl}}{{data.value}}" />
+      <img *ngIf="data.value != ''" height=60 width=100 src= "{{imageApiUrl}}{{data.value}}" />
     </div>
 
     <div *dxTemplate="let data of 'calenderTemplate'">
